@@ -7,6 +7,8 @@ Hỗ trợ Svelte 5 components ăn liền, đồng thời export pure TypeScript
 [![npm version](https://img.shields.io/npm/v/lichta)](https://www.npmjs.com/package/lichta)
 [![license](https://img.shields.io/npm/l/lichta)](https://github.com/juststridev/lichta/blob/main/LICENSE)
 
+🚀 **[Live Demo](https://lich-ta.vercel.app/)**
+
 ---
 
 ## ✨ Tính năng
@@ -142,14 +144,14 @@ getDayName(30);   // → 'Ba Mươi'
 
 #### Calendar Props
 
-| Prop           | Type                                          | Mặc định          | Mô tả                        |
+| Prop           | Type                                          | Mặc định          | Mô tả                         |
 |----------------|-----------------------------------------------|-------------------|-------------------------------|
 | `month`        | `number`                                      | Tháng hiện tại    | Tháng hiển thị (1-12)         |
 | `year`         | `number`                                      | Năm hiện tại      | Năm hiển thị                  |
 | `selectedDate` | `Date \| null`                                | `null`            | Ngày được chọn                |
 | `onSelect`     | `(date: Date, lunar: LunarDate) => void`      | —                 | Callback khi chọn ngày        |
 | `showLunar`    | `boolean`                                     | `true`            | Hiển thị ngày âm lịch         |
-| `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`                | `'vi'`            | Ngôn ngữ                     |
+| `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`                | `'vi'`            | Ngôn ngữ                      |
 | `dayCell`      | `Snippet`                                     | —                 | Custom snippet cho ô ngày     |
 
 #### Theming
@@ -201,7 +203,7 @@ getZodiacAnimal(0, 'ja'); // → '鼠'
 
 ## 📁 Import Paths
 
-| Path            | Nội dung                          | Dùng cho                       |
+| Path            | Nội dung                          | Dùng cho                      |
 |-----------------|-----------------------------------|-------------------------------|
 | `lichta`        | Toàn bộ API + Svelte components   | Svelte 5 projects             |
 | `lichta/core`   | Pure TypeScript logic             | React, Vue, Angular, vanilla  |
