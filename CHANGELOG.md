@@ -1,18 +1,20 @@
 # Changelog
 
-Tất cả các thay đổi đáng chú ý đối với dự án này sẽ được ghi lại trong tệp này.
+All notable changes to this project will be documented in this file.
 
-Định dạng của changelog này được dựa trên [Keep a Changelog](https://keepachangelog.com/vi/1.0.0/),
-và dự án này tuân thủ [Semantic Versioning](https://semver.org/lang/vi/).
+> 🇻🇳 [Phiên bản Tiếng Việt (Vietnamese version)](./CHANGELOG.vi.md)
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.0.0-beta] - 2026-06-16
 
-### Thêm mới (Added)
-- **Thuật toán chuyển đổi Dương lịch ↔ Âm lịch**: Sử dụng thuật toán Hồ Ngọc Đức với độ chính xác cao (phạm vi từ năm 1800 đến 2199).
-- **Can Chi**: Hỗ trợ tính Can Chi chi tiết cho năm, tháng, ngày và giờ.
-- **Ngũ Hành & Mệnh**: Tính toán và hiển thị mệnh (Kim, Mộc, Thủy, Hỏa, Thổ) theo năm sinh.
-- **Giờ Hoàng Đạo**: Xác định chính xác 6 giờ tốt (hoàng đạo) trong ngày.
-- **Calendar Component**: Cung cấp component Lịch tháng cho Svelte 5 có tích hợp sẵn hiển thị ngày âm lịch.
-- **Format Utilities**: Các hàm tiện ích giúp định dạng hiển thị ngày âm lịch truyền thống (ví dụ: Mùng Một tháng Giêng) và hỗ trợ format theo pattern (`dd/MM/yyyy`, `CC`, `DC`,...).
-- **Đa ngôn ngữ (i18n)**: Hỗ trợ 4 ngôn ngữ bao gồm tiếng Việt (vi), tiếng Anh (en), tiếng Nhật (ja), và tiếng Hàn (ko).
-- **Multi-framework Support**: Tách biệt core logic thành pure TypeScript (`lichta/core` và `lichta/utils`), giúp dễ dàng tích hợp với React, Vue, Angular và Vanilla JS mà không bị phụ thuộc vào Svelte.
+### Added
+- **Solar ↔ Lunar Conversion Algorithm**: Uses the Ho Ngoc Duc algorithm with high precision (range from 1800 to 2199).
+- **Sexagenary Cycle (Can Chi)**: Supports detailed calculation for year, month, day, and hour.
+- **Five Elements & Destiny (Ngũ Hành & Mệnh)**: Calculates and displays the destiny element (Metal, Wood, Water, Fire, Earth) based on birth year.
+- **Auspicious Hours (Giờ Hoàng Đạo)**: Accurately determines the 6 auspicious hours in a day.
+- **Calendar Component**: Provides a monthly Calendar component for Svelte 5 with built-in lunar date display.
+- **Format Utilities**: Utility functions to format traditional lunar dates (e.g., Mùng Một tháng Giêng) and support pattern formatting (`dd/MM/yyyy`, `CC`, `DC`,...).
+- **Multi-language (i18n)**: Supports 4 languages including Vietnamese (vi), English (en), Japanese (ja), and Korean (ko).
+- **Multi-framework Support**: Extracts core logic into pure TypeScript (`lichta/core` and `lichta/utils`), making it easy to integrate with React, Vue, Angular, and Vanilla JS without depending on Svelte.

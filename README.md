@@ -1,30 +1,32 @@
 # 🌙 LichTa
 
-**Thư viện chuyển đổi Dương lịch ↔ Âm lịch Việt Nam cho JavaScript/TypeScript.**
+**Vietnamese Solar ↔ Lunar Calendar conversion library for JavaScript/TypeScript.**
 
-Hỗ trợ Svelte 5 components ăn liền, đồng thời export pure TypeScript core cho React, Vue, Angular, và vanilla JS.
+Supports ready-to-use Svelte 5 components, while exporting a pure TypeScript core for React, Vue, Angular, and vanilla JS.
 
 [![npm version](https://img.shields.io/npm/v/lichta)](https://www.npmjs.com/package/lichta)
 [![license](https://img.shields.io/npm/l/lichta)](https://github.com/juststridev/lichta/blob/main/LICENSE)
 
 🚀 **[Live Demo](https://lich-ta.vercel.app/)**
 
+> 🇻🇳 [Phiên bản Tiếng Việt (Vietnamese version)](./README.vi.md)
+
 ---
 
-## ✨ Tính năng
+## ✨ Features
 
-- 🔄 **Chuyển đổi Solar ↔ Lunar** — Thuật toán Hồ Ngọc Đức (phạm vi 1800–2199)
-- 🐉 **Can Chi** — Tính Can Chi cho năm, tháng, ngày, giờ
-- 🔮 **Ngũ Hành & Mệnh** — Tính mệnh theo năm sinh
-- ⏰ **Giờ Hoàng Đạo** — 6 giờ tốt trong ngày
-- 📅 **Calendar Component** — Lịch tháng Svelte 5 với ngày âm lịch
-- 🎨 **Format** — Hiển thị ngày âm lịch truyền thống (Mùng Một tháng Giêng...)
-- 🌐 **i18n** — Hỗ trợ Việt–Anh–Nhật–Hàn (vi, en, ja, ko)
+- 🔄 **Solar ↔ Lunar Conversion** — Ho Ngoc Duc algorithm (range 1800–2199)
+- 🐉 **Sexagenary Cycle (Can Chi)** — Calculate Can Chi for year, month, day, and hour
+- 🔮 **Five Elements (Ngũ Hành)** — Calculate destiny element based on birth year
+- ⏰ **Auspicious Hours (Giờ Hoàng Đạo)** — 6 auspicious hours in a day
+- 📅 **Calendar Component** — Svelte 5 monthly calendar with lunar dates
+- 🎨 **Format** — Display traditional lunar dates (Mùng Một tháng Giêng...)
+- 🌐 **i18n** — Vietnamese–English–Japanese–Korean support (vi, en, ja, ko)
 - 📦 **Multi-framework** — Svelte 5, React, Vue, Angular, vanilla JS
 
 ---
 
-## 📦 Cài đặt
+## 📦 Installation
 
 ```bash
 npm install lichta
@@ -32,16 +34,16 @@ npm install lichta
 
 ---
 
-## 🚀 Sử dụng
+## 🚀 Usage
 
-### Core Logic (mọi framework)
+### Core Logic (Any framework)
 
-Import từ `lichta/core` để sử dụng **pure TypeScript** — không phụ thuộc Svelte:
+Import from `lichta/core` to use **pure TypeScript** — no Svelte dependency:
 
 ```typescript
 import { LichTa, getYearDetails } from 'lichta/core';
 
-// Dương lịch → Âm lịch
+// Solar → Lunar
 const lunar = LichTa.toLunar(10, 2, 2024);
 // → {
 //     day: 1, month: 1, year: 2024,
@@ -52,56 +54,56 @@ const lunar = LichTa.toLunar(10, 2, 2024);
 //     jd: 2460350
 //   }
 
-// Âm lịch → Dương lịch
+// Lunar → Solar
 const solar = LichTa.toSolar(1, 1, 2024, false);
 // → { day: 10, month: 2, year: 2024 }
 
-// Múi giờ tùy chỉnh (mặc định GMT+7)
+// Custom timezone (default is GMT+7)
 const lunarChina = LichTa.toLunar(10, 2, 2024, 8); // GMT+8
 ```
 
-### Can Chi & Phong Thủy
+### Sexagenary Cycle & Feng Shui (Can Chi & Phong Thủy)
 
 ```typescript
 import { getYearDetails, getDayCanChi, getMonthCanChi, getHourCanChi, getAuspiciousHours } from 'lichta/core';
 
-// Can Chi + Mệnh theo năm
+// Can Chi + Element for the year
 getYearDetails(2024);
 // → { can: 'Giáp', chi: 'Thìn', menh: 'Hỏa',
 //     fullString: 'Giáp Thìn - Mệnh Hỏa' }
 
-// Can Chi ngày (cần Julian Day Number)
+// Day Can Chi (requires Julian Day Number)
 const lunar = LichTa.toLunar(10, 2, 2024);
 getDayCanChi(lunar.jd);  // → 'Giáp Tý'
 
-// Can Chi tháng
-getMonthCanChi(1, 2024); // → tháng Giêng năm Giáp Thìn
+// Month Can Chi
+getMonthCanChi(1, 2024); // → month Giêng year Giáp Thìn
 
-// Can Chi giờ
-getHourCanChi(8, lunar.jd); // → giờ Thìn (7h-9h)
+// Hour Can Chi
+getHourCanChi(8, lunar.jd); // → hour Thìn (7h-9h)
 
-// Giờ Hoàng Đạo
+// Auspicious Hours
 getAuspiciousHours(lunar.jd);
 // → ['Tý', 'Sửu', 'Mão', 'Ngọ', 'Mùi', 'Dậu']
 ```
 
-### Format & Hiển thị
+### Format & Display
 
 ```typescript
 import { formatTraditional, formatLunarDate, getMonthName, getDayName } from 'lichta/utils';
 
 const lunar = LichTa.toLunar(10, 2, 2024);
 
-// Format truyền thống
+// Traditional format
 formatTraditional(lunar);
 // → 'Mùng Một tháng Giêng năm Giáp Thìn'
 
-// Format theo pattern
+// Pattern format
 formatLunarDate(lunar, 'dd/MM/yyyy');  // → '01/01/2024'
 formatLunarDate(lunar, 'CC');           // → 'Giáp Thìn'
 formatLunarDate(lunar, 'Ngày DC');      // → 'Ngày Giáp Tý'
 
-// Tên truyền thống
+// Traditional names
 getMonthName(1);  // → 'Giêng'
 getMonthName(12); // → 'Chạp'
 getDayName(1);    // → 'Mùng Một'
@@ -111,18 +113,18 @@ getDayName(30);   // → 'Ba Mươi'
 
 **Format tokens:**
 
-| Token  | Mô tả                         | Ví dụ        |
+| Token  | Description                   | Example      |
 |--------|-------------------------------|--------------|
-| `dd`   | Ngày 2 chữ số                 | 01, 15       |
-| `d`    | Ngày                          | 1, 15        |
-| `MM`   | Tháng 2 chữ số                | 01, 12       |
-| `M`    | Tháng                         | 1, 12        |
-| `yyyy` | Năm 4 chữ số                  | 2024         |
-| `yy`   | Năm 2 chữ số cuối             | 24           |
-| `CC`   | Can Chi năm                   | Giáp Thìn    |
-| `DC`   | Can Chi ngày                  | Giáp Tý      |
-| `MC`   | Can Chi tháng                 | Bính Dần     |
-| `L`    | "Nhuận" nếu tháng nhuận       | Nhuận        |
+| `dd`   | 2-digit day                   | 01, 15       |
+| `d`    | Day                           | 1, 15        |
+| `MM`   | 2-digit month                 | 01, 12       |
+| `M`    | Month                         | 1, 12        |
+| `yyyy` | 4-digit year                  | 2024         |
+| `yy`   | Last 2 digits of year         | 24           |
+| `CC`   | Year Can Chi                  | Giáp Thìn    |
+| `DC`   | Day Can Chi                   | Giáp Tý      |
+| `MC`   | Month Can Chi                 | Bính Dần     |
+| `L`    | "Nhuận" if leap month         | Nhuận        |
 
 ### Svelte 5 Components
 
@@ -131,32 +133,32 @@ getDayName(30);   // → 'Ba Mươi'
   import { Calendar, Formatter } from 'lichta';
 </script>
 
-<!-- Lịch tháng đầy đủ -->
+<!-- Full monthly calendar -->
 <Calendar
   showLunar={true}
   locale="vi"
   onSelect={(date, lunar) => console.log(date, lunar)}
 />
 
-<!-- Hiển thị ngày âm lịch -->
+<!-- Lunar date formatter -->
 <Formatter date={new Date()} />
 ```
 
 #### Calendar Props
 
-| Prop           | Type                                          | Mặc định          | Mô tả                         |
+| Prop           | Type                                          | Default           | Description                   |
 |----------------|-----------------------------------------------|-------------------|-------------------------------|
-| `month`        | `number`                                      | Tháng hiện tại    | Tháng hiển thị (1-12)         |
-| `year`         | `number`                                      | Năm hiện tại      | Năm hiển thị                  |
-| `selectedDate` | `Date \| null`                                | `null`            | Ngày được chọn                |
-| `onSelect`     | `(date: Date, lunar: LunarDate) => void`      | —                 | Callback khi chọn ngày        |
-| `showLunar`    | `boolean`                                     | `true`            | Hiển thị ngày âm lịch         |
-| `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`                | `'vi'`            | Ngôn ngữ                      |
-| `dayCell`      | `Snippet`                                     | —                 | Custom snippet cho ô ngày     |
+| `month`        | `number`                                      | Current month     | Displayed month (1-12)        |
+| `year`         | `number`                                      | Current year      | Displayed year                |
+| `selectedDate` | `Date \| null`                                | `null`            | Selected date                 |
+| `onSelect`     | `(date: Date, lunar: LunarDate) => void`      | —                 | Callback on date select       |
+| `showLunar`    | `boolean`                                     | `true`            | Show lunar dates              |
+| `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`                | `'vi'`            | Language                      |
+| `dayCell`      | `Snippet`                                     | —                 | Custom snippet for day cell   |
 
 #### Theming
 
-Calendar hỗ trợ CSS custom properties:
+The Calendar supports CSS custom properties:
 
 ```css
 :root {
@@ -176,7 +178,7 @@ Calendar hỗ trợ CSS custom properties:
 ```typescript
 import { t, getZodiacAnimal } from 'lichta';
 
-// Lấy bộ dịch
+// Get dictionary
 const vi = t('vi');
 vi.heavenlyStems;   // ['Giáp', 'Ất', ...]
 vi.earthlyBranches; // ['Tý', 'Sửu', ...]
@@ -193,7 +195,7 @@ ja.weekDays;        // ['日', '月', '火', '水', '木', '金', '土']
 const ko = t('ko');
 ko.fiveElements;    // ['금', '목', '수', '화', '토']
 
-// Con giáp theo năm
+// Zodiac animal by year
 getZodiacAnimal(0, 'vi'); // → 'Chuột'
 getZodiacAnimal(4, 'en'); // → 'Dragon'
 getZodiacAnimal(0, 'ja'); // → '鼠'
@@ -203,35 +205,35 @@ getZodiacAnimal(0, 'ja'); // → '鼠'
 
 ## 📁 Import Paths
 
-| Path            | Nội dung                          | Dùng cho                      |
+| Path            | Content                           | Used for                      |
 |-----------------|-----------------------------------|-------------------------------|
-| `lichta`        | Toàn bộ API + Svelte components   | Svelte 5 projects             |
+| `lichta`        | Full API + Svelte components      | Svelte 5 projects             |
 | `lichta/core`   | Pure TypeScript logic             | React, Vue, Angular, vanilla  |
-| `lichta/utils`  | Format utilities                  | Mọi framework                 |
+| `lichta/utils`  | Format utilities                  | Any framework                 |
 
 ```typescript
-// Svelte 5 — import tất cả
+// Svelte 5 — import everything
 import { LichTa, Calendar, Formatter, formatTraditional } from 'lichta';
 
-// React / Vue / Angular — chỉ import core logic
+// React / Vue / Angular — import core logic only
 import { LichTa, getYearDetails } from 'lichta/core';
 import { formatTraditional, getDayName } from 'lichta/utils';
 ```
 
 ---
 
-## 📐 Thuật toán
+## 📐 Algorithm
 
-LichTa sử dụng thuật toán chuyển đổi âm lịch của **Hồ Ngọc Đức** (Đại học Leipzig), dựa trên:
+LichTa uses the lunar conversion algorithm by **Ho Ngoc Duc** (Leipzig University), based on:
 
-- **Julian Day Number** — Hệ tọa độ ngày liên tục cho tính toán thiên văn
-- **Điểm Sóc (New Moon)** — Xác định mùng 1 âm lịch
-- **Trung Khí (Solar Terms)** — Xác định tháng và tháng nhuận
-- **Jean Meeus, "Astronomical Algorithms"** — Công thức thiên văn chính xác
+- **Julian Day Number** — Continuous day coordinate system for astronomical calculations
+- **New Moon** — Determines the 1st day of the lunar month
+- **Solar Terms** — Determines months and leap months
+- **Jean Meeus, "Astronomical Algorithms"** — Precise astronomical formulas
 
-**Phạm vi**: 1800 – 2199 | **Múi giờ mặc định**: GMT+7 (Việt Nam)
+**Range**: 1800 – 2199 | **Default timezone**: GMT+7 (Vietnam)
 
-Xem chi tiết trong [docs/ALGORITHM.md](./docs/ALGORITHM.md).
+See details in [docs/ALGORITHM.md](./docs/ALGORITHM.md).
 
 ---
 
@@ -243,5 +245,5 @@ Xem chi tiết trong [docs/ALGORITHM.md](./docs/ALGORITHM.md).
 
 ## 🙏 Credits
 
-- **Hồ Ngọc Đức** — Thuật toán gốc ([informatik.uni-leipzig.de](http://www.informatik.uni-leipzig.de/~duc/amlich/))
+- **Ho Ngoc Duc** — Original algorithm ([informatik.uni-leipzig.de](http://www.informatik.uni-leipzig.de/~duc/amlich/))
 - **Jean Meeus** — *Astronomical Algorithms* (1998)
