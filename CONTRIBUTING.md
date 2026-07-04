@@ -1,31 +1,54 @@
-# Contributing to LichTa
+# Đóng góp cho LichTa
 
-Thank you for your interest in contributing to **LichTa**! 
+Trước tiên, cảm ơn bạn đã quan tâm và muốn đóng góp cho LichTa! Chính những người như bạn đã giúp LichTa trở thành một công cụ tốt hơn cho cộng đồng.
 
-Please note that the **core source code of this library is currently private**. This public repository serves primarily as the central hub for documentation, issue tracking, and community discussion.
+## Cấu trúc dự án & Mã nguồn
 
-## How Can I Contribute?
+LichTa hoạt động theo mô hình **mã nguồn đóng nhưng phân phối công khai**.
 
-### 1. Reporting Bugs
-If you find a bug in the calculation, formatting, or components, please open an issue using the **Bug Report** template.
-When filing a bug, please include:
-- A clear description of the issue.
-- Steps to reproduce the bug (preferably with a CodeSandbox or StackBlitz link).
-- Expected vs. actual behavior.
-- Version of `lichta` and the framework you are using.
+Kho lưu trữ (repository) mà bạn đang xem (`github.com/zeforc/lichta`) đóng vai trò là nơi phân phối các bản build công khai và theo dõi lỗi (issue tracker). Nó chứa các thư mục đã được biên dịch (`dist/`) của từng package cùng các file cấu hình để phát hành lên npm — không chứa mã nguồn TypeScript gốc.
 
-### 2. Suggesting Enhancements
-Have an idea for a new feature? We'd love to hear it! Open an issue using the **Feature Request** template. Provide as much detail as possible about the use case and why it would be beneficial for the library.
+**Vì mã nguồn được giữ private, chúng tôi không nhận Pull Request sửa đổi code trực tiếp từ các bản fork của repository này.**
 
-### 3. Improving Documentation
-You can directly contribute to improving our documentation! 
-- If you spot typos, unclear explanations, or want to add more examples, feel free to open a Pull Request (PR) targeting the Markdown files in this repository.
-- We support both English (`.md`) and Vietnamese (`.vi.md`) documentation. Please try to update both if possible, or mention in your PR if you need help with translation.
+## Cách thức đóng góp
 
-## Pull Request Process for Documentation
-1. Fork the repo and create your branch from `main`.
-2. Update the relevant markdown files.
-3. Ensure you follow the existing formatting and cross-linking conventions.
-4. Submit a Pull Request with a clear description of the changes.
+Mặc dù mã nguồn là private, vẫn có nhiều cách để bạn đóng góp tích cực cho dự án:
 
-We appreciate all your help in making LichTa better!
+### 1. Báo cáo lỗi (Report Bugs) 🐛
+
+Nếu bạn tìm thấy lỗi, vui lòng [tạo một issue](https://github.com/zeforc/lichta/issues) trên GitHub. Cung cấp càng nhiều thông tin chi tiết càng tốt để giúp chúng tôi tái tạo và sửa lỗi:
+
+- Bạn đang cố gắng làm gì (ví dụ: `LichTa.toLunar(...)` với input nào).
+- Điều gì thực sự đã xảy ra (kết quả sai / lỗi hiện ra sao).
+- Kết quả bạn mong đợi.
+- Package và version đang dùng (`@lichta/core`, `@lichta/react`, ...), môi trường (Node.js version, trình duyệt, framework).
+
+### 2. Yêu cầu tính năng (Request Features) 💡
+
+Bạn có ý tưởng để làm LichTa tốt hơn? Chúng tôi rất muốn nghe! [Tạo một yêu cầu tính năng](https://github.com/zeforc/lichta/issues) và giải thích:
+
+- Tính năng đó là gì.
+- Tại sao nó lại hữu ích.
+- Ví dụ về cách nó sẽ hoạt động (API mong muốn, nếu có).
+
+### 3. Tham gia thảo luận (Join Discussions) 💬
+
+Bạn có thể giúp đỡ những người khác và chia sẻ ý tưởng của mình trong phần [Discussions](https://github.com/zeforc/lichta/discussions):
+
+- Trả lời câu hỏi từ các lập trình viên khác.
+- Chia sẻ cách bạn áp dụng LichTa vào dự án của mình.
+- Bàn luận về tính năng sắp tới hoặc ý tưởng kiến trúc.
+
+## Quy trình phát triển (dành riêng cho core team)
+
+Đối với các thành viên nội bộ có quyền truy cập vào monorepo private:
+
+1. Clone private repository về máy.
+2. Đảm bảo đã cài `pnpm` (v8+) và `Node.js` (v20+).
+3. Chạy `pnpm install`, rồi `pnpm dev:<package>` để khởi động môi trường local.
+4. Mọi thay đổi ở `@lichta/core` (đặc biệt `packages/core/src/core/lunar.ts` — thuật toán chuyển đổi) đều phải kèm test hồi quy cho ít nhất 1 năm nhuận đã biết (2020, 2023, 2025) và vượt qua `pnpm test:all` + `pnpm lint:all` trước khi merge.
+5. Publish qua `pnpm --filter <package> publish --access public`, sau đó đồng bộ bản build mới nhất sang repository này.
+
+---
+
+Cảm ơn bạn đã trở thành một phần của cộng đồng LichTa!

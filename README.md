@@ -1,249 +1,184 @@
-# 🌙 LichTa
+# LichTa 🌙
 
-**Vietnamese Solar ↔ Lunar Calendar conversion library for JavaScript/TypeScript.**
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+[![license](https://img.shields.io/npm/l/@lichta/core.svg)](./LICENSE)
 
-Supports ready-to-use Svelte 5 components, while exporting a pure TypeScript core for React, Vue, Angular, and vanilla JS.
+**Thư viện chuyển đổi Dương lịch ↔ Âm lịch Việt Nam cho JavaScript/TypeScript.**
 
-[![npm version](https://img.shields.io/npm/v/lichta)](https://www.npmjs.com/package/lichta)
-[![license](https://img.shields.io/npm/l/lichta)](https://github.com/juststridev/lichta/blob/main/LICENSE)
+Thuần TypeScript, **0 dependency** ở phần lõi, strongly-typed đầy đủ, hỗ trợ sẵn component cho React/Vue/Svelte 5 và adapter tiêm ngày âm lịch vào FullCalendar/EventCalendar/React Big Calendar.
 
-🚀 **[Live Demo](https://lich-ta.vercel.app/)**
-
-> 🇻🇳 [Phiên bản Tiếng Việt (Vietnamese version)](./README.vi.md)
+🚀 **[Live Demo & Tài liệu](https://lichta.zeneo.app/)**
 
 ---
 
-## ✨ Features
+## ✨ Tính năng
 
-- 🔄 **Solar ↔ Lunar Conversion** — Ho Ngoc Duc algorithm (range 1800–2199)
-- 🐉 **Sexagenary Cycle (Can Chi)** — Calculate Can Chi for year, month, day, and hour
-- 🔮 **Five Elements (Ngũ Hành)** — Calculate destiny element based on birth year
-- ⏰ **Auspicious Hours (Giờ Hoàng Đạo)** — 6 auspicious hours in a day
-- 📅 **Calendar Component** — Svelte 5 monthly calendar with lunar dates
-- 🎨 **Format** — Display traditional lunar dates (Mùng Một tháng Giêng...)
-- 🌐 **i18n** — Vietnamese–English–Japanese–Korean support (vi, en, ja, ko)
-- 📦 **Multi-framework** — Svelte 5, React, Vue, Angular, vanilla JS
+- 🔄 **Chuyển đổi Solar ↔ Lunar** chính xác — thuật toán Hồ Ngọc Đức (phạm vi năm 1800–2199)
+- 🐉 **Can Chi** — tính Can Chi cho năm, tháng, ngày, giờ
+- 🔮 **Ngũ Hành & Mệnh** — tính mệnh theo năm sinh
+- ⏰ **Giờ Hoàng Đạo** — 6 giờ tốt trong ngày
+- 🎨 **Format linh hoạt** — hiển thị ngày âm lịch truyền thống hoặc theo pattern tùy chỉnh
+- 🌐 **i18n** — hỗ trợ Việt–Anh–Nhật–Hàn (vi, en, ja, ko)
+- 📅 **Component sẵn dùng** — `Calendar`/`Formatter` cho React, Vue, Svelte 5
+- 🔌 **Plugin tích hợp** — FullCalendar, EventCalendar, React Big Calendar
+- 📦 **Modular** — cài đúng phần cần dùng, `@lichta/core` không phụ thuộc framework nào
 
----
+## 📦 Packages
 
-## 📦 Installation
+| Package | Mô tả |
+|---|---|
+| [`@lichta/core`](https://www.npmjs.com/package/@lichta/core) | Thuật toán lõi Solar↔Lunar, Can Chi, Ngũ Hành, format — thuần TypeScript, 0 dependency |
+| [`@lichta/react`](https://www.npmjs.com/package/@lichta/react) | Component `Calendar` cho React |
+| [`@lichta/vue`](https://www.npmjs.com/package/@lichta/vue) | Component `Calendar` cho Vue 3 |
+| [`@lichta/svelte`](https://www.npmjs.com/package/@lichta/svelte) | Component `Calendar`/`Formatter` cho Svelte 5 (re-export toàn bộ `@lichta/core`) |
+| [`@lichta/full-calendar`](https://www.npmjs.com/package/@lichta/full-calendar) | Adapter tiêm ngày âm lịch vào [FullCalendar](https://fullcalendar.io/) |
+| [`@lichta/event-calendar`](https://www.npmjs.com/package/@lichta/event-calendar) | Adapter tiêm ngày âm lịch vào [EventCalendar](https://github.com/vkurko/calendar) |
+| [`@lichta/react-big-calendar`](https://www.npmjs.com/package/@lichta/react-big-calendar) | Adapter tiêm ngày âm lịch vào [React Big Calendar](https://github.com/jquense/react-big-calendar) |
+
+`@lichta/core` được cài kèm tự động khi bạn cài bất kỳ package nào ở trên — không cần cài riêng.
+
+## Cài đặt nhanh
 
 ```bash
-npm install lichta
+pnpm add @lichta/core
+# hoặc: npm install @lichta/core / yarn add @lichta/core / bun add @lichta/core
 ```
 
----
+Dùng React/Vue/Svelte? Cài thêm package binding tương ứng (`@lichta/react`, `@lichta/vue`, `@lichta/svelte`) — xem bảng packages ở trên.
 
-## 🚀 Usage
-
-### Core Logic (Any framework)
-
-Import from `lichta/core` to use **pure TypeScript** — no Svelte dependency:
+## Sử dụng cơ bản
 
 ```typescript
-import { LichTa, getYearDetails } from 'lichta/core';
+import { LichTa } from '@lichta/core';
 
-// Solar → Lunar
+// Dương lịch → Âm lịch
 const lunar = LichTa.toLunar(10, 2, 2024);
-// → {
-//     day: 1, month: 1, year: 2024,
-//     isLeap: false,
-//     yearCanChi: 'Giáp Thìn',
-//     monthCanChi: 'Bính Dần',
-//     dayCanChi: '...',
-//     jd: 2460350
-//   }
+// → { day: 1, month: 1, year: 2024, isLeap: false, jd: 2460351,
+//     dayCanChi: 'Giáp Thìn', monthCanChi: 'Bính Dần', yearCanChi: 'Giáp Thìn' }
 
-// Lunar → Solar
+// Âm lịch → Dương lịch (isLeap bắt buộc truyền đúng nếu là tháng nhuận)
 const solar = LichTa.toSolar(1, 1, 2024, false);
 // → { day: 10, month: 2, year: 2024 }
 
-// Custom timezone (default is GMT+7)
-const lunarChina = LichTa.toLunar(10, 2, 2024, 8); // GMT+8
+// Múi giờ tùy chỉnh (mặc định GMT+7 Việt Nam)
+const lunarGmt8 = LichTa.toLunar(10, 2, 2024, 8);
 ```
 
-### Sexagenary Cycle & Feng Shui (Can Chi & Phong Thủy)
+`toLunar`/`toSolar` throw `RangeError` nếu ngày/tháng/năm ngoài phạm vi hợp lệ (năm **1800–2199**) — nên bọc trong `try/catch` khi nhận input từ người dùng.
+
+## Can Chi & Phong Thủy
 
 ```typescript
-import { getYearDetails, getDayCanChi, getMonthCanChi, getHourCanChi, getAuspiciousHours } from 'lichta/core';
+import { LichTa, getYearDetails, getDayCanChi, getMonthCanChi, getHourCanChi, getAuspiciousHours } from '@lichta/core';
 
-// Can Chi + Element for the year
 getYearDetails(2024);
-// → { can: 'Giáp', chi: 'Thìn', menh: 'Hỏa',
-//     fullString: 'Giáp Thìn - Mệnh Hỏa' }
+// → { can: 'Giáp', chi: 'Thìn', menh: 'Thủy', fullString: 'Giáp Thìn - Mệnh Thủy' }
 
-// Day Can Chi (requires Julian Day Number)
 const lunar = LichTa.toLunar(10, 2, 2024);
-getDayCanChi(lunar.jd);  // → 'Giáp Tý'
-
-// Month Can Chi
-getMonthCanChi(1, 2024); // → month Giêng year Giáp Thìn
-
-// Hour Can Chi
-getHourCanChi(8, lunar.jd); // → hour Thìn (7h-9h)
-
-// Auspicious Hours
-getAuspiciousHours(lunar.jd);
-// → ['Tý', 'Sửu', 'Mão', 'Ngọ', 'Mùi', 'Dậu']
+getDayCanChi(lunar.jd);                    // 'Giáp Thìn'
+getMonthCanChi(lunar.month, lunar.year);   // 'Bính Dần'
+getHourCanChi(8, lunar.jd);                // giờ Thìn (7h-9h)
+getAuspiciousHours(lunar.jd);              // 6 giờ Hoàng Đạo trong ngày
 ```
 
-### Format & Display
+## Format & Hiển thị
 
 ```typescript
-import { formatTraditional, formatLunarDate, getMonthName, getDayName } from 'lichta/utils';
+import { formatTraditional, formatLunarDate, getMonthName, getDayName } from '@lichta/core';
 
-const lunar = LichTa.toLunar(10, 2, 2024);
+formatTraditional(lunar);                        // 'Mùng Một tháng Giêng năm Giáp Thìn'
+formatLunarDate(lunar, 'dd/MM/yyyy');             // '01/01/2024'
+formatLunarDate(lunar, 'Ngày d tháng M năm CC');  // 'Ngày 1 tháng 1 năm Giáp Thìn'
 
-// Traditional format
-formatTraditional(lunar);
-// → 'Mùng Một tháng Giêng năm Giáp Thìn'
-
-// Pattern format
-formatLunarDate(lunar, 'dd/MM/yyyy');  // → '01/01/2024'
-formatLunarDate(lunar, 'CC');           // → 'Giáp Thìn'
-formatLunarDate(lunar, 'Ngày DC');      // → 'Ngày Giáp Tý'
-
-// Traditional names
-getMonthName(1);  // → 'Giêng'
-getMonthName(12); // → 'Chạp'
-getDayName(1);    // → 'Mùng Một'
-getDayName(15);   // → 'Rằm'
-getDayName(30);   // → 'Ba Mươi'
+getMonthName(1);   // 'Giêng'
+getDayName(15);    // 'Rằm'
 ```
 
-**Format tokens:**
+**Format tokens:** `dd`/`d` (ngày), `MM`/`M` (tháng), `yyyy`/`yy` (năm), `CC`/`MC`/`DC` (Can Chi năm/tháng/ngày), `L` ("Nhuận" nếu là tháng nhuận).
 
-| Token  | Description                   | Example      |
-|--------|-------------------------------|--------------|
-| `dd`   | 2-digit day                   | 01, 15       |
-| `d`    | Day                           | 1, 15        |
-| `MM`   | 2-digit month                 | 01, 12       |
-| `M`    | Month                         | 1, 12        |
-| `yyyy` | 4-digit year                  | 2024         |
-| `yy`   | Last 2 digits of year         | 24           |
-| `CC`   | Year Can Chi                  | Giáp Thìn    |
-| `DC`   | Day Can Chi                   | Giáp Tý      |
-| `MC`   | Month Can Chi                 | Bính Dần     |
-| `L`    | "Nhuận" if leap month         | Nhuận        |
+## i18n
 
-### Svelte 5 Components
+Hỗ trợ 4 ngôn ngữ cho tên Can Chi, Ngũ Hành, con giáp, tên tháng, thứ trong tuần: `vi`, `en`, `ja`, `ko`.
+
+```typescript
+import { t, getZodiacAnimal } from '@lichta/core';
+
+t('en').fiveElements;       // ['Metal', 'Wood', 'Water', 'Fire', 'Earth']
+t('ja').weekDays;           // ['日', '月', '火', '水', '木', '金', '土']
+getZodiacAnimal(0, 'vi');   // 'Chuột'
+```
+
+## Component cho framework UI
+
+Mỗi package binding export component `Calendar` (lịch tháng có ngày âm lịch) đóng gói trên `@lichta/core`.
+
+**React**
+
+```tsx
+import { Calendar } from '@lichta/react';
+import '@lichta/core/styles/calendar-base.css';
+
+<Calendar theme="glass" locale="vi" onSelect={(date, lunar) => console.log(date, lunar)} />
+```
+
+**Vue**
+
+```vue
+<Calendar theme="glass" locale="vi" @select="onSelect" />
+```
+
+**Svelte 5**
 
 ```svelte
-<script>
-  import { Calendar, Formatter } from 'lichta';
-</script>
-
-<!-- Full monthly calendar -->
-<Calendar
-  showLunar={true}
-  locale="vi"
-  onSelect={(date, lunar) => console.log(date, lunar)}
-/>
-
-<!-- Lunar date formatter -->
-<Formatter date={new Date()} />
+<Calendar theme="glass" locale="vi" onSelect={(date, lunar) => console.log(date, lunar)} />
 ```
 
-#### Calendar Props
+Chi tiết props, custom render, theming: xem README của từng package ([`@lichta/react`](https://www.npmjs.com/package/@lichta/react), [`@lichta/vue`](https://www.npmjs.com/package/@lichta/vue), [`@lichta/svelte`](https://www.npmjs.com/package/@lichta/svelte)).
 
-| Prop           | Type                                          | Default           | Description                   |
-|----------------|-----------------------------------------------|-------------------|-------------------------------|
-| `month`        | `number`                                      | Current month     | Displayed month (1-12)        |
-| `year`         | `number`                                      | Current year      | Displayed year                |
-| `selectedDate` | `Date \| null`                                | `null`            | Selected date                 |
-| `onSelect`     | `(date: Date, lunar: LunarDate) => void`      | —                 | Callback on date select       |
-| `showLunar`    | `boolean`                                     | `true`            | Show lunar dates              |
-| `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`                | `'vi'`            | Language                      |
-| `dayCell`      | `Snippet`                                     | —                 | Custom snippet for day cell   |
+## Tích hợp Calendar bên thứ 3
 
-#### Theming
-
-The Calendar supports CSS custom properties:
-
-```css
-:root {
-  --lichta-primary: #d4a373;
-  --lichta-bg: #fffcf7;
-  --lichta-text: #2c1810;
-  --lichta-today-bg: #d4a373;
-  --lichta-selected-bg: #a0522d;
-  --lichta-lunar-text: #b08968;
-  --lichta-radius: 8px;
-  --lichta-font: 'Inter', sans-serif;
-}
-```
-
-### i18n
+`@lichta/full-calendar`, `@lichta/event-calendar`, `@lichta/react-big-calendar` export một hàm duy nhất `injectLunarDates(options, pluginOptions?)` — bọc cấu hình gốc của calendar library và tiêm ngày âm lịch vào từng ô ngày.
 
 ```typescript
-import { t, getZodiacAnimal } from 'lichta';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { injectLunarDates } from '@lichta/full-calendar';
 
-// Get dictionary
-const vi = t('vi');
-vi.heavenlyStems;   // ['Giáp', 'Ất', ...]
-vi.earthlyBranches; // ['Tý', 'Sửu', ...]
-vi.fiveElements;    // ['Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ']
-vi.monthNames;      // ['Giêng', 'Hai', ..., 'Chạp']
-
-const en = t('en');
-en.fiveElements;    // ['Metal', 'Wood', 'Water', 'Fire', 'Earth']
-en.zodiacAnimals;   // ['Rat', 'Ox', 'Tiger', ...]
-
-const ja = t('ja');
-ja.weekDays;        // ['日', '月', '火', '水', '木', '金', '土']
-
-const ko = t('ko');
-ko.fiveElements;    // ['금', '목', '수', '화', '토']
-
-// Zodiac animal by year
-getZodiacAnimal(0, 'vi'); // → 'Chuột'
-getZodiacAnimal(4, 'en'); // → 'Dragon'
-getZodiacAnimal(0, 'ja'); // → '鼠'
+const calendar = new Calendar(el, injectLunarDates({
+  plugins: [dayGridPlugin],
+  initialView: 'dayGridMonth'
+}, { showLeapMonth: true, color: '#81b29a' }));
 ```
 
----
+Chi tiết từng adapter: xem README của [`@lichta/full-calendar`](https://www.npmjs.com/package/@lichta/full-calendar), [`@lichta/event-calendar`](https://www.npmjs.com/package/@lichta/event-calendar), [`@lichta/react-big-calendar`](https://www.npmjs.com/package/@lichta/react-big-calendar).
 
-## 📁 Import Paths
+## 📚 Tài liệu
 
-| Path            | Content                           | Used for                      |
-|-----------------|-----------------------------------|-------------------------------|
-| `lichta`        | Full API + Svelte components      | Svelte 5 projects             |
-| `lichta/core`   | Pure TypeScript logic             | React, Vue, Angular, vanilla  |
-| `lichta/utils`  | Format utilities                  | Any framework                 |
+- [Tài liệu đầy đủ](https://lichta.zeneo.app/docs) — cài đặt, sử dụng, components, tích hợp
+- [API Reference](https://lichta.zeneo.app/api) — chữ ký hàm, kiểu dữ liệu, ví dụ đã chạy thật
+- [Về LichTa](https://lichta.zeneo.app/about) — nguồn gốc thuật toán, hệ sinh thái package
+- [Demo trực tiếp](https://lichta.zeneo.app/) — thử tương tác từng framework/integration
 
-```typescript
-// Svelte 5 — import everything
-import { LichTa, Calendar, Formatter, formatTraditional } from 'lichta';
+## Thuật toán
 
-// React / Vue / Angular — import core logic only
-import { LichTa, getYearDetails } from 'lichta/core';
-import { formatTraditional, getDayName } from 'lichta/utils';
-```
+LichTa sử dụng thuật toán chuyển đổi âm lịch của **Hồ Ngọc Đức** (Đại học Leipzig), dựa trên các công thức thiên văn trong *"Astronomical Algorithms"* của **Jean Meeus** (1998) — chuẩn de facto cho lịch âm Việt Nam trong lập trình.
 
----
+- **Julian Day Number** — hệ tọa độ ngày liên tục cho tính toán thiên văn
+- **Điểm Sóc (New Moon)** — xác định mùng 1 âm lịch
+- **Trung Khí (Solar Terms)** — xác định tháng và tháng nhuận
 
-## 📐 Algorithm
+**Phạm vi hỗ trợ**: 1800 – 2199 | **Múi giờ mặc định**: GMT+7 (Việt Nam)
 
-LichTa uses the lunar conversion algorithm by **Ho Ngoc Duc** (Leipzig University), based on:
+## Đóng góp
 
-- **Julian Day Number** — Continuous day coordinate system for astronomical calculations
-- **New Moon** — Determines the 1st day of the lunar month
-- **Solar Terms** — Determines months and leap months
-- **Jean Meeus, "Astronomical Algorithms"** — Precise astronomical formulas
+Repo này chỉ chứa bản build công khai (`dist/`) và đóng vai trò issue tracker — mã nguồn được giữ private nên không nhận PR sửa code trực tiếp tại đây. Bạn có thể [báo lỗi, đề xuất tính năng, hoặc tham gia thảo luận](./CONTRIBUTING.md).
 
-**Range**: 1800 – 2199 | **Default timezone**: GMT+7 (Vietnam)
-
-See details in [docs/ALGORITHM.md](./docs/ALGORITHM.md).
-
----
-
-## 📄 License
+## License
 
 [MIT](./LICENSE)
 
----
-
 ## 🙏 Credits
 
-- **Ho Ngoc Duc** — Original algorithm ([informatik.uni-leipzig.de](http://www.informatik.uni-leipzig.de/~duc/amlich/))
+- **Hồ Ngọc Đức** — thuật toán gốc ([informatik.uni-leipzig.de](http://www.informatik.uni-leipzig.de/~duc/amlich/))
 - **Jean Meeus** — *Astronomical Algorithms* (1998)
+- **Zeforc Labs** — phát triển và duy trì

@@ -1,0 +1,40 @@
+{
+  "name": "@lichta/vue",
+  "version": "2.0.0",
+  "description": "Vue components for LichTa",
+  "author": "Zeforc Labs | Stridev",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/lichta-vue.umd.js",
+  "module": "./dist/lichta-vue.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/lichta-vue.es.js",
+      "require": "./dist/lichta-vue.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build && vue-tsc --emitDeclarationOnly",
+    "dev": "vite build --watch",
+    "lint": "eslint src/**/*.vue"
+  },
+  "dependencies": {
+    "@lichta/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^2.2.0"
+  }
+}

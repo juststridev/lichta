@@ -1,0 +1,25 @@
+{
+  "name": "lichta",
+  "version": "2.0.0",
+  "description": "LichTa - Thư viện lịch Âm Dương Việt Nam (Tương thích ngược)",
+  "author": "Zeforc Labs | Stridev",
+  "license": "MIT",
+  "type": "module",
+  "svelte": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "svelte": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@lichta/svelte": "workspace:*"
+  }
+}

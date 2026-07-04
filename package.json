@@ -1,0 +1,29 @@
+{
+  "name": "lichta",
+  "description": "Thư viện chuyển đổi Dương lịch ↔ Âm lịch Việt Nam cho JavaScript/TypeScript",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "keywords": [
+    "lunar",
+    "lunar-calendar",
+    "vietnamese-calendar",
+    "am-lich",
+    "duong-lich",
+    "can-chi",
+    "ngu-hanh",
+    "solar-lunar"
+  ],
+  "author": "Zeforc Labs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
+}
