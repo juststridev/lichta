@@ -1,6 +1,6 @@
 {
   "name": "lichta",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "LichTa - Thư viện lịch Âm Dương Việt Nam (Tương thích ngược)",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
@@ -21,5 +21,13 @@
   ],
   "dependencies": {
     "@lichta/svelte": "workspace:*"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
 }

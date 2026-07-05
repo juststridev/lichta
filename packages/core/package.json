@@ -1,6 +1,6 @@
 {
   "name": "@lichta/core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Thư viện lõi tính toán Dương lịch ↔ Âm lịch Việt Nam",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
@@ -32,5 +32,13 @@
     "tsup": "^8.0.0",
     "typescript": "^6.0.0",
     "vitest": "^3.2.6"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
 }

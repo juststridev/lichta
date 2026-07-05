@@ -1,6 +1,6 @@
 {
   "name": "@lichta/react",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React components for LichTa",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
@@ -31,5 +31,13 @@
     "react-dom": "^19.0.0",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
 }

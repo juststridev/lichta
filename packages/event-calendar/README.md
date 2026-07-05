@@ -7,8 +7,10 @@ Plugin/Adapter tích hợp lịch âm Việt Nam (LichTa) vào thư viện [Even
 ## Cài đặt
 
 ```bash
-pnpm add @lichta/event-calendar @event-calendar/core
+pnpm add @lichta/event-calendar @event-calendar/core @event-calendar/day-grid
 ```
+
+Cài thêm plugin view khác (`@event-calendar/time-grid`, `@event-calendar/list`, ...) tùy theo view bạn muốn dùng — `@event-calendar/day-grid` chỉ là plugin phổ biến nhất cho view tháng.
 
 ## Cách sử dụng cơ bản
 
@@ -18,17 +20,22 @@ Bạn chỉ cần bọc cấu hình gốc của EventCalendar bằng hàm `injec
 import Calendar from '@event-calendar/core';
 import DayGrid from '@event-calendar/day-grid';
 import { injectLunarDates } from '@lichta/event-calendar';
+import '@event-calendar/core/index.css';
 
-const calendarOptions = injectLunarDates({
-    target: document.getElementById('calendar'),
-    plugins: [DayGrid],
-    options: {
-        view: 'dayGridMonth'
-        // ... các options gốc của EventCalendar
-    }
+// injectLunarDates nhận vào object `options` gốc của EventCalendar (không phải
+// object khởi tạo `{ target, props }`) và trả về options đã gắn thêm ngày âm lịch.
+const options = injectLunarDates({
+    view: 'dayGridMonth'
+    // ... các options gốc khác của EventCalendar
 });
 
-let calendar = new Calendar(calendarOptions);
+const calendar = new Calendar({
+    target: document.getElementById('calendar'),
+    props: {
+        plugins: [DayGrid],
+        options
+    }
+});
 ```
 
 ## Tùy chọn giao diện (Options)
@@ -71,6 +78,7 @@ const calendarOptions = injectLunarDates(baseOptions, {
 ## Phụ thuộc (Dependencies)
 - **@lichta/core**: workspace dependency (tự động cài kèm)
 - **@event-calendar/core**: ^3.0.0 (peer dependency)
+- Ít nhất 1 plugin view của EventCalendar (ví dụ **@event-calendar/day-grid**) — cài riêng, không phải dependency của package này
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "@lichta/event-calendar",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EventCalendar adapter for LichTa",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
@@ -31,5 +31,13 @@
   "devDependencies": {
     "@event-calendar/core": "^3.0.0",
     "typescript": "^6.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
 }

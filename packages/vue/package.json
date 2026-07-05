@@ -1,6 +1,6 @@
 {
   "name": "@lichta/vue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Vue components for LichTa",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
@@ -36,5 +36,13 @@
     "vite": "^6.0.0",
     "vue": "^3.5.0",
     "vue-tsc": "^2.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeforc/lichta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeforc/lichta/issues"
+  },
+  "homepage": "https://github.com/zeforc/lichta#readme"
 }
