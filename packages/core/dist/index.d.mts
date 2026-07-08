@@ -73,22 +73,106 @@ declare class LichTa {
 }
 
 /**
- * Lấy ra chuỗi mô tả toàn bộ Can, Chi và Mệnh dựa vào số năm (Ví dụ: 2024)
- * Theo quy ước: Năm 4 (sau CN) là năm Giáp Tý (Can index 0, Chi index 0)
+ * Internationalization — Hỗ trợ song ngữ Việt-Anh
  */
-declare function getYearDetails(year: number): {
-    can: "Giáp" | "Ất" | "Bính" | "Đinh" | "Mậu" | "Kỷ" | "Canh" | "Tân" | "Nhâm" | "Quý";
-    chi: "Tý" | "Sửu" | "Dần" | "Mão" | "Thìn" | "Tỵ" | "Ngọ" | "Mùi" | "Thân" | "Dậu" | "Tuất" | "Hợi";
+type Locale = 'vi' | 'en' | 'ja' | 'ko';
+/**
+ * Lấy bộ dịch theo locale
+ * @param locale - Ngôn ngữ ('vi' | 'en' | 'ja' | 'ko')
+ */
+declare function t(locale: Locale): {
+    readonly heavenlyStems: readonly ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
+    readonly earthlyBranches: readonly ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+    readonly fiveElements: readonly ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ"];
+    readonly zodiacAnimals: readonly ["Chuột", "Trâu", "Cọp", "Thỏ", "Rồng", "Rắn", "Ngựa", "Dê", "Khỉ", "Gà", "Chó", "Heo"];
+    readonly monthNames: readonly ["Giêng", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười", "Một", "Chạp"];
+    readonly lunarMonthNames: readonly ["Giêng", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười", "Một", "Chạp"];
+    readonly solarMonthNames: readonly ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+    readonly weekDays: readonly ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    readonly leapLabel: "Nhuận";
+    readonly yearLabel: "Năm";
+    readonly monthLabel: "Tháng";
+    readonly destiny: "Mệnh";
+} | {
+    readonly heavenlyStems: readonly ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
+    readonly earthlyBranches: readonly ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+    readonly fiveElements: readonly ["Metal", "Wood", "Water", "Fire", "Earth"];
+    readonly zodiacAnimals: readonly ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"];
+    readonly monthNames: readonly ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    readonly lunarMonthNames: readonly ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"];
+    readonly solarMonthNames: readonly ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    readonly weekDays: readonly ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    readonly leapLabel: "Leap";
+    readonly yearLabel: "Year";
+    readonly monthLabel: "Month";
+    readonly destiny: "Destiny";
+} | {
+    readonly heavenlyStems: readonly ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+    readonly earthlyBranches: readonly ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+    readonly fiveElements: readonly ["金", "木", "水", "火", "土"];
+    readonly zodiacAnimals: readonly ["鼠", "牛", "虎", "兎", "竜", "蛇", "馬", "羊", "猿", "鶏", "犬", "猪"];
+    readonly monthNames: readonly ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+    readonly lunarMonthNames: readonly ["旧暦1月", "旧暦2月", "旧暦3月", "旧暦4月", "旧暦5月", "旧暦6月", "旧暦7月", "旧暦8月", "旧暦9月", "旧暦10月", "旧暦11月", "旧暦12月"];
+    readonly solarMonthNames: readonly ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+    readonly weekDays: readonly ["日", "月", "火", "水", "木", "金", "土"];
+    readonly leapLabel: "閏";
+    readonly yearLabel: "年";
+    readonly monthLabel: "月";
+    readonly destiny: "命";
+} | {
+    readonly heavenlyStems: readonly ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
+    readonly earthlyBranches: readonly ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
+    readonly fiveElements: readonly ["금", "목", "수", "화", "토"];
+    readonly zodiacAnimals: readonly ["쥐", "소", "호랑이", "토끼", "용", "뱀", "말", "양", "원숭이", "닭", "개", "돼지"];
+    readonly monthNames: readonly ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+    readonly lunarMonthNames: readonly ["음력 1월", "음력 2월", "음력 3월", "음력 4월", "음력 5월", "음력 6월", "음력 7월", "음력 8월", "음력 9월", "음력 10월", "음력 11월", "음력 12월"];
+    readonly solarMonthNames: readonly ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+    readonly weekDays: readonly ["일", "월", "화", "수", "목", "금", "토"];
+    readonly leapLabel: "윤";
+    readonly yearLabel: "년";
+    readonly monthLabel: "월";
+    readonly destiny: "명";
+};
+/**
+ * Lấy tên con giáp theo locale
+ * @param branchIndex - Index Địa Chi (0-11)
+ * @param locale - Ngôn ngữ
+ */
+declare function getZodiacAnimal(branchIndex: number, locale?: Locale): string;
+
+/** Kết quả trả về của {@link getYearDetails}. */
+interface YearDetails {
+    can: string;
+    chi: string;
     menh: string;
     fullString: string;
-};
+}
+/**
+ * Lấy ra chuỗi mô tả toàn bộ Can, Chi và Mệnh dựa vào số năm (Ví dụ: 2024)
+ * Theo quy ước: Năm 4 (sau CN) là năm Giáp Tý (Can index 0, Chi index 0)
+ *
+ * Công thức Can Chi là chu kỳ 60 năm lặp lại vô hạn nên nhận mọi số năm nguyên,
+ * kể cả năm 0 hoặc âm (trước Công Nguyên) — không giới hạn phạm vi như
+ * {@link LichTa.toLunar} (phạm vi đó là do thuật toán tìm Điểm Sóc, không áp
+ * dụng cho công thức Can Chi thuần).
+ *
+ * @param year - Năm (số nguyên bất kỳ, kể cả 0 hoặc âm)
+ *
+ * @example
+ * ```typescript
+ * getYearDetails(2024);
+ * // → { can: 'Giáp', chi: 'Thìn', menh: 'Thủy', fullString: 'Giáp Thìn - Mệnh Thủy' }
+ * ```
+ */
+declare function getYearDetails(year: number): YearDetails;
 /**
  * Tính Can Chi ngày từ Julian Day Number.
  *
  * @param jd - Julian Day Number
+ * @param locale - Ngôn ngữ hiển thị (mặc định: 'vi', giữ nguyên hành vi cũ)
  * @returns Chuỗi Can Chi (ví dụ: "Giáp Tý")
  */
-declare function getDayCanChi(jd: number): string;
+declare function getDayCanChi(jd: number, locale?: Locale): string;
 /**
  * Tính Can Chi tháng từ tháng và năm âm lịch.
  * Can tháng phụ thuộc vào Can của năm (quy tắc Ngũ Hổ Độn):
@@ -100,8 +184,9 @@ declare function getDayCanChi(jd: number): string;
  *
  * @param lunarMonth - Tháng âm lịch (1-12)
  * @param lunarYear - Năm âm lịch
+ * @param locale - Ngôn ngữ hiển thị (mặc định: 'vi', giữ nguyên hành vi cũ)
  */
-declare function getMonthCanChi(lunarMonth: number, lunarYear: number): string;
+declare function getMonthCanChi(lunarMonth: number, lunarYear: number, locale?: Locale): string;
 /**
  * Tính Can Chi giờ từ giờ (0-23) và Julian Day Number của ngày.
  *
@@ -117,16 +202,30 @@ declare function getMonthCanChi(lunarMonth: number, lunarYear: number): string;
  *
  * @param hour - Giờ (0-23)
  * @param dayJd - Julian Day Number của ngày
+ * @param locale - Ngôn ngữ hiển thị (mặc định: 'vi', giữ nguyên hành vi cũ)
  */
-declare function getHourCanChi(hour: number, dayJd: number): string;
+declare function getHourCanChi(hour: number, dayJd: number, locale?: Locale): string;
 /**
  * Lấy danh sách 6 giờ Hoàng Đạo trong ngày.
  * Giờ Hoàng Đạo phụ thuộc vào Địa Chi của ngày.
  *
  * @param dayJd - Julian Day Number của ngày
+ * @param locale - Ngôn ngữ hiển thị (mặc định: 'vi', giữ nguyên hành vi cũ)
  * @returns Mảng 6 chuỗi tên Địa Chi (ví dụ: ["Tý", "Sửu", "Mão", "Ngọ", "Mùi", "Dậu"])
  */
-declare function getAuspiciousHours(dayJd: number): string[];
+declare function getAuspiciousHours(dayJd: number, locale?: Locale): string[];
+/**
+ * Lấy index (0-11, theo thứ tự Địa Chi Tý→Hợi) của 6 giờ Hoàng Đạo trong ngày.
+ *
+ * Dùng khi cần một khoá ổn định, không phụ thuộc ngôn ngữ — ví dụ để map sang
+ * icon riêng, hoặc tự tra bảng dịch của bạn thay vì dùng chuỗi tên có sẵn từ
+ * {@link getAuspiciousHours}. Cả hai hàm dùng chung thứ tự dữ liệu nên
+ * `getAuspiciousHourIndices(jd)[i]` luôn tương ứng với `getAuspiciousHours(jd)[i]`.
+ *
+ * @param dayJd - Julian Day Number của ngày
+ * @returns Mảng 6 index Địa Chi (ví dụ: [0, 1, 3, 6, 7, 9])
+ */
+declare function getAuspiciousHourIndices(dayJd: number): number[];
 
 /**
  * Lấy tên tháng âm lịch dạng chữ truyền thống.
@@ -170,13 +269,14 @@ declare function getDayName(day: number): string;
  * | `M`   | Tháng                                    | 1, 12          |
  * | `yyyy`| Năm 4 chữ số                             | 2024           |
  * | `yy`  | Năm 2 chữ số cuối                        | 24             |
- * | `L`   | "Nhuận" nếu tháng nhuận, "" nếu không    | Nhuận          |
+ * | `L`   | Nhãn tháng nhuận theo `locale` (xem tham số `locale`), "" nếu không phải tháng nhuận | Nhuận |
  * | `CC`  | Can Chi năm                              | Giáp Thìn      |
  * | `DC`  | Can Chi ngày                             | Giáp Tý        |
  * | `MC`  | Can Chi tháng                            | Bính Dần       |
  *
  * @param lunar - Đối tượng LunarDate
  * @param pattern - Chuỗi pattern
+ * @param locale - Ngôn ngữ cho token `L` (mặc định: 'vi', giữ nguyên hành vi cũ — "Nhuận")
  *
  * @example
  * ```typescript
@@ -187,7 +287,7 @@ declare function getDayName(day: number): string;
  * // → "Ngày 1 tháng 1 năm Giáp Thìn"
  * ```
  */
-declare function formatLunarDate(lunar: LunarDate, pattern: string): string;
+declare function formatLunarDate(lunar: LunarDate, pattern: string, locale?: Locale): string;
 /**
  * Format ngày âm lịch theo kiểu truyền thống Việt Nam.
  *
@@ -202,64 +302,26 @@ declare function formatLunarDate(lunar: LunarDate, pattern: string): string;
  */
 declare function formatTraditional(lunar: LunarDate): string;
 
+/** Một ô ngày trong lưới lịch tháng. */
+interface CalendarDayCell {
+    solar: Date;
+    lunar: LunarDate;
+    isToday: boolean;
+    isSelected: boolean;
+    isCurrentMonth: boolean;
+}
 /**
- * Internationalization — Hỗ trợ song ngữ Việt-Anh
+ * Dựng lưới 42 ô (6 tuần x 7 ngày) cho 1 tháng dương lịch, gồm ngày tràn từ
+ * tháng trước/sau để lấp đầy tuần đầu/cuối, mỗi ô kèm ngày âm tương ứng.
+ *
+ * Logic này trước đây bị lặp lại độc lập ở Calendar.tsx/vue/svelte — tách ra
+ * đây để có 1 nguồn tính toán duy nhất (tránh 3 bản có thể lệch nhau khi sửa
+ * riêng lẻ), dùng chung cho cả Calendar và DatePicker ở mọi framework.
+ *
+ * @param month - Tháng dương lịch (1-12)
+ * @param year - Năm dương lịch
+ * @param selectedDate - Ngày đang được chọn (nếu có), dùng để đánh dấu `isSelected`
  */
-type Locale = 'vi' | 'en' | 'ja' | 'ko';
-/**
- * Lấy bộ dịch theo locale
- * @param locale - Ngôn ngữ ('vi' | 'en' | 'ja' | 'ko')
- */
-declare function t(locale: Locale): {
-    readonly heavenlyStems: readonly ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
-    readonly earthlyBranches: readonly ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
-    readonly fiveElements: readonly ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ"];
-    readonly zodiacAnimals: readonly ["Chuột", "Trâu", "Cọp", "Thỏ", "Rồng", "Rắn", "Ngựa", "Dê", "Khỉ", "Gà", "Chó", "Heo"];
-    readonly monthNames: readonly ["Giêng", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười", "Một", "Chạp"];
-    readonly weekDays: readonly ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-    readonly leapLabel: "Nhuận";
-    readonly yearLabel: "Năm";
-    readonly monthLabel: "Tháng";
-    readonly destiny: "Mệnh";
-} | {
-    readonly heavenlyStems: readonly ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
-    readonly earthlyBranches: readonly ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
-    readonly fiveElements: readonly ["Metal", "Wood", "Water", "Fire", "Earth"];
-    readonly zodiacAnimals: readonly ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"];
-    readonly monthNames: readonly ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    readonly weekDays: readonly ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    readonly leapLabel: "Leap";
-    readonly yearLabel: "Year";
-    readonly monthLabel: "Month";
-    readonly destiny: "Destiny";
-} | {
-    readonly heavenlyStems: readonly ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
-    readonly earthlyBranches: readonly ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
-    readonly fiveElements: readonly ["金", "木", "水", "火", "土"];
-    readonly zodiacAnimals: readonly ["鼠", "牛", "虎", "兎", "竜", "蛇", "馬", "羊", "猿", "鶏", "犬", "猪"];
-    readonly monthNames: readonly ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-    readonly weekDays: readonly ["日", "月", "火", "水", "木", "金", "土"];
-    readonly leapLabel: "閏";
-    readonly yearLabel: "年";
-    readonly monthLabel: "月";
-    readonly destiny: "命";
-} | {
-    readonly heavenlyStems: readonly ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
-    readonly earthlyBranches: readonly ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
-    readonly fiveElements: readonly ["금", "목", "수", "화", "토"];
-    readonly zodiacAnimals: readonly ["쥐", "소", "호랑이", "토끼", "용", "뱀", "말", "양", "원숭이", "닭", "개", "돼지"];
-    readonly monthNames: readonly ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-    readonly weekDays: readonly ["일", "월", "화", "수", "목", "금", "토"];
-    readonly leapLabel: "윤";
-    readonly yearLabel: "년";
-    readonly monthLabel: "월";
-    readonly destiny: "명";
-};
-/**
- * Lấy tên con giáp theo locale
- * @param branchIndex - Index Địa Chi (0-11)
- * @param locale - Ngôn ngữ
- */
-declare function getZodiacAnimal(branchIndex: number, locale?: Locale): string;
+declare function getCalendarGrid(month: number, year: number, selectedDate?: Date | null): CalendarDayCell[];
 
-export { LichTa, type Locale, type LunarDate, type SolarDate, formatLunarDate, formatTraditional, getAuspiciousHours, getDayCanChi, getDayName, getHourCanChi, getMonthCanChi, getMonthName, getYearDetails, getZodiacAnimal, jdFromDate, jdToDate, t };
+export { type CalendarDayCell, LichTa, type Locale, type LunarDate, type SolarDate, type YearDetails, formatLunarDate, formatTraditional, getAuspiciousHourIndices, getAuspiciousHours, getCalendarGrid, getDayCanChi, getDayName, getHourCanChi, getMonthCanChi, getMonthName, getYearDetails, getZodiacAnimal, jdFromDate, jdToDate, t };

@@ -1,139 +1,224 @@
-import { defineComponent as q, ref as $, computed as L, openBlock as i, createElementBlock as d, normalizeClass as b, createElementVNode as l, toDisplayString as o, Fragment as T, renderList as N, createTextVNode as Y, createCommentVNode as x, renderSlot as A } from "vue";
-import { getYearDetails as H, LichTa as w } from "@lichta/core";
-const J = { class: "lich-ta-calendar-header" }, P = { class: "lich-ta-calendar-title" }, Q = { class: "lich-ta-calendar-month-year" }, R = { class: "lich-ta-calendar-canchi" }, U = { class: "lich-ta-calendar-weekdays" }, X = { class: "lich-ta-calendar-grid" }, Z = ["tabindex", "onClick", "onKeydown"], ee = { class: "solar-day" }, ae = {
+import { defineComponent as V, ref as f, computed as y, watch as K, openBlock as l, createElementBlock as s, normalizeClass as L, createElementVNode as a, toDisplayString as t, Fragment as m, renderList as x, createTextVNode as E, createCommentVNode as S, renderSlot as O, onMounted as z, onBeforeUnmount as A } from "vue";
+import { getYearDetails as P, t as N, getCalendarGrid as G } from "@lichta/core";
+const U = { class: "lich-ta-calendar-header" }, j = { class: "lich-ta-calendar-title" }, q = { class: "lich-ta-calendar-month-year" }, H = { class: "lich-ta-calendar-canchi" }, J = { class: "lich-ta-calendar-weekdays" }, Q = { class: "lich-ta-calendar-grid" }, R = ["tabindex", "onClick", "onKeydown"], W = { class: "solar-day" }, X = {
   key: 0,
   class: "lunar-day"
-}, te = {
+}, Z = {
   key: 0,
   class: "lich-ta-calendar-footer"
-}, le = /* @__PURE__ */ q({
+}, pe = /* @__PURE__ */ V({
   __name: "Calendar",
   props: {
     month: { default: (/* @__PURE__ */ new Date()).getMonth() + 1 },
     year: { default: (/* @__PURE__ */ new Date()).getFullYear() },
+    selectedDate: { default: void 0 },
     showLunar: { type: Boolean, default: !0 },
     locale: { default: "vi" },
     theme: { default: "classic" }
   },
   emits: ["select"],
-  setup(F, { emit: B }) {
-    const v = F, e = $(v.month), s = $(v.year), h = $(null), C = L(() => H(s.value)), E = B, K = [
-      "Tháng 1",
-      "Tháng 2",
-      "Tháng 3",
-      "Tháng 4",
-      "Tháng 5",
-      "Tháng 6",
-      "Tháng 7",
-      "Tháng 8",
-      "Tháng 9",
-      "Tháng 10",
-      "Tháng 11",
-      "Tháng 12"
-    ], V = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"], I = L(() => {
-      const t = [], y = new Date(s.value, e.value - 1, 1), a = new Date(s.value, e.value, 0), D = y.getDay(), g = a.getDate(), p = /* @__PURE__ */ new Date(), _ = `${p.getFullYear()}-${p.getMonth() + 1}-${p.getDate()}`;
-      let f = "";
-      h.value && (f = `${h.value.getFullYear()}-${h.value.getMonth() + 1}-${h.value.getDate()}`);
-      const W = new Date(s.value, e.value - 1, 0).getDate();
-      for (let n = D - 1; n >= 0; n--) {
-        const r = W - n, c = e.value - 1 < 1 ? 12 : e.value - 1, u = e.value - 1 < 1 ? s.value - 1 : s.value, k = new Date(u, c - 1, r), m = w.toLunar(r, c, u), S = `${u}-${c}-${r}`;
-        t.push({
-          solar: k,
-          lunar: m,
-          isToday: S === _,
-          isSelected: S === f,
-          isCurrentMonth: !1
-        });
-      }
-      for (let n = 1; n <= g; n++) {
-        const r = new Date(s.value, e.value - 1, n), c = w.toLunar(n, e.value, s.value), u = `${s.value}-${e.value}-${n}`;
-        t.push({
-          solar: r,
-          lunar: c,
-          isToday: u === _,
-          isSelected: u === f,
-          isCurrentMonth: !0
-        });
-      }
-      const j = 42 - t.length;
-      for (let n = 1; n <= j; n++) {
-        const r = e.value + 1 > 12 ? 1 : e.value + 1, c = e.value + 1 > 12 ? s.value + 1 : s.value, u = new Date(c, r - 1, n), k = w.toLunar(n, r, c), m = `${c}-${r}-${n}`;
-        t.push({
-          solar: u,
-          lunar: k,
-          isToday: m === _,
-          isSelected: m === f,
-          isCurrentMonth: !1
-        });
-      }
-      return t;
+  setup(r, { emit: k }) {
+    const e = r, d = f(e.month), i = f(e.year), h = f(null), _ = y(
+      () => e.selectedDate !== void 0 ? e.selectedDate : h.value
+    );
+    K(() => e.month, (o) => {
+      d.value = o;
+    }), K(() => e.year, (o) => {
+      i.value = o;
     });
-    function z() {
-      e.value === 1 ? (e.value = 12, s.value -= 1) : e.value -= 1;
+    const g = y(() => P(i.value)), u = k, p = y(() => N(e.locale).weekDays), b = y(() => N(e.locale).solarMonthNames), T = y(
+      () => G(d.value, i.value, _.value)
+    );
+    function Y() {
+      d.value === 1 ? (d.value = 12, i.value -= 1) : d.value -= 1;
     }
-    function G() {
-      e.value === 12 ? (e.value = 1, s.value += 1) : e.value += 1;
+    function B() {
+      d.value === 12 ? (d.value = 1, i.value += 1) : d.value += 1;
     }
-    function M(t) {
-      h.value = t.solar, E("select", t.solar, t.lunar);
+    function C(o) {
+      e.selectedDate === void 0 && (h.value = o.solar), u("select", o.solar, o.lunar);
     }
-    function O(t, y) {
-      (t.key === "Enter" || t.key === " ") && (t.preventDefault(), M(y));
+    function F(o, $) {
+      (o.key === "Enter" || o.key === " ") && (o.preventDefault(), C($));
     }
-    return (t, y) => (i(), d("div", {
-      class: b(["lich-ta-calendar", `lichta-theme-${v.theme}`])
+    return (o, $) => (l(), s("div", {
+      class: L(["lich-ta-calendar", `lichta-theme-${e.theme}`])
     }, [
-      l("div", J, [
-        l("button", {
+      a("div", U, [
+        a("button", {
           class: "lich-ta-calendar-nav",
           "aria-label": "Tháng trước",
-          onClick: z
+          onClick: Y
         }, "◀"),
-        l("div", P, [
-          l("span", Q, o(K[e.value - 1]) + ", " + o(s.value), 1),
-          l("span", R, o(C.value.can) + " " + o(C.value.chi), 1)
+        a("div", j, [
+          a("span", q, t(b.value[d.value - 1]) + ", " + t(i.value), 1),
+          a("span", H, t(g.value.can) + " " + t(g.value.chi), 1)
         ]),
-        l("button", {
+        a("button", {
           class: "lich-ta-calendar-nav",
           "aria-label": "Tháng sau",
-          onClick: G
+          onClick: B
         }, "▶")
       ]),
-      l("div", U, [
-        (i(), d(T, null, N(V, (a) => l("div", {
-          key: a,
+      a("div", J, [
+        (l(!0), s(m, null, x(p.value, (n) => (l(), s("div", {
+          key: n,
           class: "lich-ta-calendar-weekday"
-        }, o(a), 1)), 64))
+        }, t(n), 1))), 128))
       ]),
-      l("div", X, [
-        (i(!0), d(T, null, N(I.value, (a, D) => (i(), d("button", {
-          key: D,
-          class: b(["lich-ta-calendar-day", {
-            "is-today": a.isToday,
-            "is-selected": a.isSelected,
-            "is-other-month": !a.isCurrentMonth,
-            "is-first-lunar": a.lunar.day === 1
+      a("div", Q, [
+        (l(!0), s(m, null, x(T.value, (n, M) => (l(), s("button", {
+          key: M,
+          class: L(["lich-ta-calendar-day", {
+            "is-today": n.isToday,
+            "is-selected": n.isSelected,
+            "is-other-month": !n.isCurrentMonth,
+            "is-first-lunar": n.lunar.day === 1
           }]),
-          tabindex: a.isCurrentMonth ? 0 : -1,
-          onClick: (g) => M(a),
-          onKeydown: (g) => O(g, a)
+          tabindex: n.isCurrentMonth ? 0 : -1,
+          onClick: (w) => C(n),
+          onKeydown: (w) => F(w, n)
         }, [
-          l("span", ee, o(a.solar.getDate()), 1),
-          v.showLunar ? (i(), d("span", ae, [
-            a.lunar.day === 1 ? (i(), d(T, { key: 0 }, [
-              Y(o(a.lunar.day) + "/" + o(a.lunar.month) + o(a.lunar.isLeap ? "*" : ""), 1)
-            ], 64)) : (i(), d(T, { key: 1 }, [
-              Y(o(a.lunar.day), 1)
+          a("span", W, t(n.solar.getDate()), 1),
+          e.showLunar ? (l(), s("span", X, [
+            n.lunar.day === 1 ? (l(), s(m, { key: 0 }, [
+              E(t(n.lunar.day) + "/" + t(n.lunar.month) + t(n.lunar.isLeap ? "*" : ""), 1)
+            ], 64)) : (l(), s(m, { key: 1 }, [
+              E(t(n.lunar.day), 1)
             ], 64))
-          ])) : x("", !0)
-        ], 42, Z))), 128))
+          ])) : S("", !0)
+        ], 42, R))), 128))
       ]),
-      t.$slots.default ? (i(), d("div", te, [
-        A(t.$slots, "default")
-      ])) : x("", !0)
+      o.$slots.default ? (l(), s("div", Z, [
+        O(o.$slots, "default")
+      ])) : S("", !0)
+    ], 2));
+  }
+}), ee = ["disabled", "placeholder", "value", "aria-expanded"], ae = {
+  key: 0,
+  class: "lich-ta-datepicker-popover",
+  role: "dialog"
+}, te = { class: "lich-ta-datepicker-calendar" }, ne = { class: "lich-ta-datepicker-calendar-header" }, le = { class: "lich-ta-datepicker-calendar-title" }, se = { class: "lich-ta-datepicker-calendar-month-year" }, oe = { class: "lich-ta-datepicker-calendar-canchi" }, ce = { class: "lich-ta-datepicker-calendar-weekdays" }, ie = { class: "lich-ta-datepicker-calendar-grid" }, re = ["tabindex", "onClick"], de = { class: "solar-day" }, ue = {
+  key: 0,
+  class: "lunar-day"
+}, fe = /* @__PURE__ */ V({
+  __name: "DatePicker",
+  props: {
+    value: { default: null },
+    placeholder: { default: "Chọn ngày" },
+    locale: { default: "vi" },
+    theme: { default: "classic" },
+    showLunar: { type: Boolean, default: !0 },
+    format: { type: Function, default: (r) => {
+      const k = String(r.getDate()).padStart(2, "0"), e = String(r.getMonth() + 1).padStart(2, "0");
+      return `${k}/${e}/${r.getFullYear()}`;
+    } },
+    disabled: { type: Boolean, default: !1 }
+  },
+  emits: ["select"],
+  setup(r, { emit: k }) {
+    const e = r, d = k, i = f(e.value), h = f(!1), _ = f(null), g = i.value ?? /* @__PURE__ */ new Date(), u = f(g.getMonth() + 1), p = f(g.getFullYear());
+    K(
+      () => e.value,
+      (v) => {
+        const D = v ?? null;
+        i.value = D, D && (u.value = D.getMonth() + 1, p.value = D.getFullYear());
+      }
+    );
+    const b = y(() => P(p.value)), T = y(() => N(e.locale).weekDays), Y = y(() => N(e.locale).solarMonthNames), B = y(() => G(u.value, p.value, i.value)), C = y(() => i.value ? e.format(i.value) : "");
+    function F() {
+      e.disabled || (h.value = !h.value);
+    }
+    function o() {
+      u.value === 1 ? (u.value = 12, p.value -= 1) : u.value -= 1;
+    }
+    function $() {
+      u.value === 12 ? (u.value = 1, p.value += 1) : u.value += 1;
+    }
+    function n(v) {
+      i.value = v.solar, h.value = !1, d("select", v.solar, v.lunar);
+    }
+    function M(v) {
+      _.value && !_.value.contains(v.target) && (h.value = !1);
+    }
+    function w(v) {
+      v.key === "Escape" && (h.value = !1);
+    }
+    return z(() => {
+      document.addEventListener("mousedown", M), document.addEventListener("keydown", w);
+    }), A(() => {
+      document.removeEventListener("mousedown", M), document.removeEventListener("keydown", w);
+    }), (v, D) => (l(), s("div", {
+      ref_key: "rootEl",
+      ref: _,
+      class: L(["lich-ta-datepicker", `lichta-theme-${r.theme}`])
+    }, [
+      a("input", {
+        type: "text",
+        class: "lich-ta-datepicker-input",
+        readonly: "",
+        disabled: r.disabled,
+        placeholder: r.placeholder,
+        value: C.value,
+        "aria-haspopup": "dialog",
+        "aria-expanded": h.value,
+        onClick: F
+      }, null, 8, ee),
+      h.value ? (l(), s("div", ae, [
+        a("div", te, [
+          a("div", ne, [
+            a("button", {
+              type: "button",
+              class: "lich-ta-datepicker-calendar-nav",
+              "aria-label": "Tháng trước",
+              onClick: o
+            }, " ◀ "),
+            a("div", le, [
+              a("span", se, t(Y.value[u.value - 1]) + ", " + t(p.value), 1),
+              a("span", oe, t(b.value.can) + " " + t(b.value.chi), 1)
+            ]),
+            a("button", {
+              type: "button",
+              class: "lich-ta-datepicker-calendar-nav",
+              "aria-label": "Tháng sau",
+              onClick: $
+            }, " ▶ ")
+          ]),
+          a("div", ce, [
+            (l(!0), s(m, null, x(T.value, (c) => (l(), s("div", {
+              key: c,
+              class: "lich-ta-datepicker-calendar-weekday"
+            }, t(c), 1))), 128))
+          ]),
+          a("div", ie, [
+            (l(!0), s(m, null, x(B.value, (c, I) => (l(), s("button", {
+              key: I,
+              type: "button",
+              class: L(["lich-ta-datepicker-calendar-day", {
+                "is-today": c.isToday,
+                "is-selected": c.isSelected,
+                "is-other-month": !c.isCurrentMonth,
+                "is-first-lunar": c.lunar.day === 1
+              }]),
+              tabindex: c.isCurrentMonth ? 0 : -1,
+              onClick: (he) => n(c)
+            }, [
+              a("span", de, t(c.solar.getDate()), 1),
+              r.showLunar ? (l(), s("span", ue, [
+                c.lunar.day === 1 ? (l(), s(m, { key: 0 }, [
+                  E(t(c.lunar.day) + "/" + t(c.lunar.month) + t(c.lunar.isLeap ? "*" : ""), 1)
+                ], 64)) : (l(), s(m, { key: 1 }, [
+                  E(t(c.lunar.day), 1)
+                ], 64))
+              ])) : S("", !0)
+            ], 10, re))), 128))
+          ])
+        ])
+      ])) : S("", !0)
     ], 2));
   }
 });
 export {
-  le as Calendar
+  pe as Calendar,
+  fe as DatePicker
 };

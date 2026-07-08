@@ -1,6 +1,9 @@
 # @lichta/full-calendar
 
 [![npm version](https://img.shields.io/npm/v/@lichta/full-calendar.svg)](https://www.npmjs.com/package/@lichta/full-calendar)
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+
+🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
 Plugin/Adapter tích hợp lịch âm Việt Nam (LichTa) vào thư viện [FullCalendar](https://fullcalendar.io/).
 
