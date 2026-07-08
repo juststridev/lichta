@@ -1,30 +1,11 @@
 // src/Calendar.tsx
-import React, { useState, useMemo } from "react";
-import { LichTa, getYearDetails } from "@lichta/core";
+import React, { useState, useMemo, useEffect } from "react";
+import { getYearDetails, getCalendarGrid, t } from "@lichta/core";
 import { jsx, jsxs } from "react/jsx-runtime";
-var monthNames = [
-  "Th\xE1ng 1",
-  "Th\xE1ng 2",
-  "Th\xE1ng 3",
-  "Th\xE1ng 4",
-  "Th\xE1ng 5",
-  "Th\xE1ng 6",
-  "Th\xE1ng 7",
-  "Th\xE1ng 8",
-  "Th\xE1ng 9",
-  "Th\xE1ng 10",
-  "Th\xE1ng 11",
-  "Th\xE1ng 12"
-];
-var weekDayLabelsByLocale = {
-  vi: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-  ja: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-  ko: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-};
 var Calendar = ({
   month = (/* @__PURE__ */ new Date()).getMonth() + 1,
   year = (/* @__PURE__ */ new Date()).getFullYear(),
+  selectedDate: selectedDateProp,
   onSelect,
   showLunar = true,
   locale = "vi",
@@ -35,66 +16,20 @@ var Calendar = ({
 }) => {
   const [currentMonth, setCurrentMonth] = useState(month);
   const [currentYear, setCurrentYear] = useState(year);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [internalSelectedDate, setInternalSelectedDate] = useState(null);
+  const selectedDate = selectedDateProp !== void 0 ? selectedDateProp : internalSelectedDate;
+  useEffect(() => {
+    setCurrentMonth(month);
+  }, [month]);
+  useEffect(() => {
+    setCurrentYear(year);
+  }, [year]);
   const yearInfo = useMemo(() => getYearDetails(currentYear), [currentYear]);
-  const weekDayLabels = weekDayLabelsByLocale[locale];
-  const calendarGrid = useMemo(() => {
-    const grid = [];
-    const firstDay = new Date(currentYear, currentMonth - 1, 1);
-    const lastDay = new Date(currentYear, currentMonth, 0);
-    const startingDayOfWeek = firstDay.getDay();
-    const daysInMonth = lastDay.getDate();
-    const today = /* @__PURE__ */ new Date();
-    const todayStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let selStr = "";
-    if (selectedDate) {
-      selStr = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
-    }
-    const prevMonthLastDay = new Date(currentYear, currentMonth - 1, 0).getDate();
-    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-      const d = prevMonthLastDay - i;
-      const m = currentMonth - 1 < 1 ? 12 : currentMonth - 1;
-      const y = currentMonth - 1 < 1 ? currentYear - 1 : currentYear;
-      const solar = new Date(y, m - 1, d);
-      const lunar = LichTa.toLunar(d, m, y);
-      const dateStr = `${y}-${m}-${d}`;
-      grid.push({
-        solar,
-        lunar,
-        isToday: dateStr === todayStr,
-        isSelected: dateStr === selStr,
-        isCurrentMonth: false
-      });
-    }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const solar = new Date(currentYear, currentMonth - 1, d);
-      const lunar = LichTa.toLunar(d, currentMonth, currentYear);
-      const dateStr = `${currentYear}-${currentMonth}-${d}`;
-      grid.push({
-        solar,
-        lunar,
-        isToday: dateStr === todayStr,
-        isSelected: dateStr === selStr,
-        isCurrentMonth: true
-      });
-    }
-    const remaining = 42 - grid.length;
-    for (let d = 1; d <= remaining; d++) {
-      const m = currentMonth + 1 > 12 ? 1 : currentMonth + 1;
-      const y = currentMonth + 1 > 12 ? currentYear + 1 : currentYear;
-      const solar = new Date(y, m - 1, d);
-      const lunar = LichTa.toLunar(d, m, y);
-      const dateStr = `${y}-${m}-${d}`;
-      grid.push({
-        solar,
-        lunar,
-        isToday: dateStr === todayStr,
-        isSelected: dateStr === selStr,
-        isCurrentMonth: false
-      });
-    }
-    return grid;
-  }, [currentMonth, currentYear, selectedDate]);
+  const { weekDays: weekDayLabels, solarMonthNames: monthNames } = t(locale);
+  const calendarGrid = useMemo(
+    () => getCalendarGrid(currentMonth, currentYear, selectedDate),
+    [currentMonth, currentYear, selectedDate]
+  );
   const prevMonth = () => {
     if (currentMonth === 1) {
       setCurrentMonth(12);
@@ -112,7 +47,9 @@ var Calendar = ({
     }
   };
   const handleDayClick = (cell) => {
-    setSelectedDate(cell.solar);
+    if (selectedDateProp === void 0) {
+      setInternalSelectedDate(cell.solar);
+    }
     if (onSelect) {
       onSelect(cell.solar, cell.lunar);
     }
@@ -168,6 +105,161 @@ var Calendar = ({
     children && /* @__PURE__ */ jsx("div", { className: "lich-ta-calendar-footer", children })
   ] });
 };
+
+// src/DatePicker.tsx
+import { useState as useState2, useRef, useEffect as useEffect2, useMemo as useMemo2 } from "react";
+import { getYearDetails as getYearDetails2, getCalendarGrid as getCalendarGrid2, t as t2 } from "@lichta/core";
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+function defaultFormat(date) {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}/${date.getFullYear()}`;
+}
+var DatePicker = ({
+  value = null,
+  onSelect,
+  placeholder = "Ch\u1ECDn ng\xE0y",
+  locale = "vi",
+  theme = "classic",
+  showLunar = true,
+  format = defaultFormat,
+  disabled = false,
+  className = ""
+}) => {
+  const [selected, setSelected] = useState2(value);
+  const [isOpen, setIsOpen] = useState2(false);
+  const anchor = selected ?? /* @__PURE__ */ new Date();
+  const [viewMonth, setViewMonth] = useState2(anchor.getMonth() + 1);
+  const [viewYear, setViewYear] = useState2(anchor.getFullYear());
+  const rootRef = useRef(null);
+  useEffect2(() => {
+    const next = value ?? null;
+    setSelected(next);
+    if (next) {
+      setViewMonth(next.getMonth() + 1);
+      setViewYear(next.getFullYear());
+    }
+  }, [value]);
+  useEffect2(() => {
+    if (!isOpen) return;
+    function handlePointerDown(event) {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    function handleKeydown(event) {
+      if (event.key === "Escape") setIsOpen(false);
+    }
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeydown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, [isOpen]);
+  const yearInfo = useMemo2(() => getYearDetails2(viewYear), [viewYear]);
+  const { weekDays: weekDayLabels, solarMonthNames: monthNames } = t2(locale);
+  const grid = useMemo2(
+    () => getCalendarGrid2(viewMonth, viewYear, selected),
+    [viewMonth, viewYear, selected]
+  );
+  function prevMonth() {
+    if (viewMonth === 1) {
+      setViewMonth(12);
+      setViewYear((y) => y - 1);
+    } else {
+      setViewMonth((m) => m - 1);
+    }
+  }
+  function nextMonth() {
+    if (viewMonth === 12) {
+      setViewMonth(1);
+      setViewYear((y) => y + 1);
+    } else {
+      setViewMonth((m) => m + 1);
+    }
+  }
+  function handleDaySelect(cell) {
+    setSelected(cell.solar);
+    setIsOpen(false);
+    onSelect?.(cell.solar, cell.lunar);
+  }
+  return /* @__PURE__ */ jsxs2("div", { ref: rootRef, className: `lich-ta-datepicker lichta-theme-${theme} ${className}`, children: [
+    /* @__PURE__ */ jsx2(
+      "input",
+      {
+        type: "text",
+        className: "lich-ta-datepicker-input",
+        readOnly: true,
+        disabled,
+        placeholder,
+        value: selected ? format(selected) : "",
+        "aria-haspopup": "dialog",
+        "aria-expanded": isOpen,
+        onClick: () => !disabled && setIsOpen((open) => !open)
+      }
+    ),
+    isOpen && /* @__PURE__ */ jsx2("div", { className: "lich-ta-datepicker-popover", role: "dialog", children: /* @__PURE__ */ jsxs2("div", { className: "lich-ta-datepicker-calendar", children: [
+      /* @__PURE__ */ jsxs2("div", { className: "lich-ta-datepicker-calendar-header", children: [
+        /* @__PURE__ */ jsx2(
+          "button",
+          {
+            type: "button",
+            className: "lich-ta-datepicker-calendar-nav",
+            onClick: prevMonth,
+            "aria-label": "Th\xE1ng tr\u01B0\u1EDBc",
+            children: "\u25C0"
+          }
+        ),
+        /* @__PURE__ */ jsxs2("div", { className: "lich-ta-datepicker-calendar-title", children: [
+          /* @__PURE__ */ jsxs2("span", { className: "lich-ta-datepicker-calendar-month-year", children: [
+            monthNames[viewMonth - 1],
+            ", ",
+            viewYear
+          ] }),
+          /* @__PURE__ */ jsxs2("span", { className: "lich-ta-datepicker-calendar-canchi", children: [
+            yearInfo.can,
+            " ",
+            yearInfo.chi
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx2(
+          "button",
+          {
+            type: "button",
+            className: "lich-ta-datepicker-calendar-nav",
+            onClick: nextMonth,
+            "aria-label": "Th\xE1ng sau",
+            children: "\u25B6"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx2("div", { className: "lich-ta-datepicker-calendar-weekdays", children: weekDayLabels.map((label) => /* @__PURE__ */ jsx2("div", { className: "lich-ta-datepicker-calendar-weekday", children: label }, label)) }),
+      /* @__PURE__ */ jsx2("div", { className: "lich-ta-datepicker-calendar-grid", children: grid.map((cell, idx) => {
+        let classes = "lich-ta-datepicker-calendar-day";
+        if (cell.isToday) classes += " is-today";
+        if (cell.isSelected) classes += " is-selected";
+        if (!cell.isCurrentMonth) classes += " is-other-month";
+        if (cell.lunar.day === 1) classes += " is-first-lunar";
+        return /* @__PURE__ */ jsxs2(
+          "button",
+          {
+            type: "button",
+            className: classes,
+            onClick: () => handleDaySelect(cell),
+            tabIndex: cell.isCurrentMonth ? 0 : -1,
+            children: [
+              /* @__PURE__ */ jsx2("span", { className: "solar-day", children: cell.solar.getDate() }),
+              showLunar && /* @__PURE__ */ jsx2("span", { className: "lunar-day", children: cell.lunar.day === 1 ? `${cell.lunar.day}/${cell.lunar.month}${cell.lunar.isLeap ? "*" : ""}` : cell.lunar.day })
+            ]
+          },
+          idx
+        );
+      }) })
+    ] }) })
+  ] });
+};
 export {
-  Calendar
+  Calendar,
+  DatePicker
 };

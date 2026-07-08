@@ -282,10 +282,83 @@ var LichTa = class {
 // src/constants/five-elements.ts
 var FIVE_ELEMENTS = ["Kim", "M\u1ED9c", "Th\u1EE7y", "H\u1ECFa", "Th\u1ED5"];
 
+// src/constants/i18n.ts
+var translations = {
+  vi: {
+    heavenlyStems: ["Gi\xE1p", "\u1EA4t", "B\xEDnh", "\u0110inh", "M\u1EADu", "K\u1EF7", "Canh", "T\xE2n", "Nh\xE2m", "Qu\xFD"],
+    earthlyBranches: ["T\xFD", "S\u1EEDu", "D\u1EA7n", "M\xE3o", "Th\xECn", "T\u1EF5", "Ng\u1ECD", "M\xF9i", "Th\xE2n", "D\u1EADu", "Tu\u1EA5t", "H\u1EE3i"],
+    fiveElements: ["Kim", "M\u1ED9c", "Th\u1EE7y", "H\u1ECFa", "Th\u1ED5"],
+    zodiacAnimals: ["Chu\u1ED9t", "Tr\xE2u", "C\u1ECDp", "Th\u1ECF", "R\u1ED3ng", "R\u1EAFn", "Ng\u1EF1a", "D\xEA", "Kh\u1EC9", "G\xE0", "Ch\xF3", "Heo"],
+    // @deprecated Ngữ nghĩa không nhất quán giữa các locale (xem lunarMonthNames/solarMonthNames).
+    monthNames: ["Gi\xEAng", "Hai", "Ba", "T\u01B0", "N\u0103m", "S\xE1u", "B\u1EA3y", "T\xE1m", "Ch\xEDn", "M\u01B0\u1EDDi", "M\u1ED9t", "Ch\u1EA1p"],
+    lunarMonthNames: ["Gi\xEAng", "Hai", "Ba", "T\u01B0", "N\u0103m", "S\xE1u", "B\u1EA3y", "T\xE1m", "Ch\xEDn", "M\u01B0\u1EDDi", "M\u1ED9t", "Ch\u1EA1p"],
+    solarMonthNames: ["Th\xE1ng 1", "Th\xE1ng 2", "Th\xE1ng 3", "Th\xE1ng 4", "Th\xE1ng 5", "Th\xE1ng 6", "Th\xE1ng 7", "Th\xE1ng 8", "Th\xE1ng 9", "Th\xE1ng 10", "Th\xE1ng 11", "Th\xE1ng 12"],
+    weekDays: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+    leapLabel: "Nhu\u1EADn",
+    yearLabel: "N\u0103m",
+    monthLabel: "Th\xE1ng",
+    destiny: "M\u1EC7nh"
+  },
+  en: {
+    heavenlyStems: ["Gi\xE1p", "\u1EA4t", "B\xEDnh", "\u0110inh", "M\u1EADu", "K\u1EF7", "Canh", "T\xE2n", "Nh\xE2m", "Qu\xFD"],
+    earthlyBranches: ["T\xFD", "S\u1EEDu", "D\u1EA7n", "M\xE3o", "Th\xECn", "T\u1EF5", "Ng\u1ECD", "M\xF9i", "Th\xE2n", "D\u1EADu", "Tu\u1EA5t", "H\u1EE3i"],
+    fiveElements: ["Metal", "Wood", "Water", "Fire", "Earth"],
+    zodiacAnimals: ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"],
+    // @deprecated Ngữ nghĩa không nhất quán giữa các locale (xem lunarMonthNames/solarMonthNames).
+    monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    lunarMonthNames: ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"],
+    solarMonthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    weekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    leapLabel: "Leap",
+    yearLabel: "Year",
+    monthLabel: "Month",
+    destiny: "Destiny"
+  },
+  ja: {
+    heavenlyStems: ["\u7532", "\u4E59", "\u4E19", "\u4E01", "\u620A", "\u5DF1", "\u5E9A", "\u8F9B", "\u58EC", "\u7678"],
+    earthlyBranches: ["\u5B50", "\u4E11", "\u5BC5", "\u536F", "\u8FB0", "\u5DF3", "\u5348", "\u672A", "\u7533", "\u9149", "\u620C", "\u4EA5"],
+    fiveElements: ["\u91D1", "\u6728", "\u6C34", "\u706B", "\u571F"],
+    zodiacAnimals: ["\u9F20", "\u725B", "\u864E", "\u514E", "\u7ADC", "\u86C7", "\u99AC", "\u7F8A", "\u733F", "\u9D8F", "\u72AC", "\u732A"],
+    // @deprecated Ngữ nghĩa không nhất quán giữa các locale (xem lunarMonthNames/solarMonthNames).
+    monthNames: ["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],
+    lunarMonthNames: ["\u65E7\u66A61\u6708", "\u65E7\u66A62\u6708", "\u65E7\u66A63\u6708", "\u65E7\u66A64\u6708", "\u65E7\u66A65\u6708", "\u65E7\u66A66\u6708", "\u65E7\u66A67\u6708", "\u65E7\u66A68\u6708", "\u65E7\u66A69\u6708", "\u65E7\u66A610\u6708", "\u65E7\u66A611\u6708", "\u65E7\u66A612\u6708"],
+    solarMonthNames: ["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],
+    weekDays: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
+    leapLabel: "\u958F",
+    yearLabel: "\u5E74",
+    monthLabel: "\u6708",
+    destiny: "\u547D"
+  },
+  ko: {
+    heavenlyStems: ["\uAC11", "\uC744", "\uBCD1", "\uC815", "\uBB34", "\uAE30", "\uACBD", "\uC2E0", "\uC784", "\uACC4"],
+    earthlyBranches: ["\uC790", "\uCD95", "\uC778", "\uBB18", "\uC9C4", "\uC0AC", "\uC624", "\uBBF8", "\uC2E0", "\uC720", "\uC220", "\uD574"],
+    fiveElements: ["\uAE08", "\uBAA9", "\uC218", "\uD654", "\uD1A0"],
+    zodiacAnimals: ["\uC950", "\uC18C", "\uD638\uB791\uC774", "\uD1A0\uB07C", "\uC6A9", "\uBC40", "\uB9D0", "\uC591", "\uC6D0\uC22D\uC774", "\uB2ED", "\uAC1C", "\uB3FC\uC9C0"],
+    // @deprecated Ngữ nghĩa không nhất quán giữa các locale (xem lunarMonthNames/solarMonthNames).
+    monthNames: ["1\uC6D4", "2\uC6D4", "3\uC6D4", "4\uC6D4", "5\uC6D4", "6\uC6D4", "7\uC6D4", "8\uC6D4", "9\uC6D4", "10\uC6D4", "11\uC6D4", "12\uC6D4"],
+    lunarMonthNames: ["\uC74C\uB825 1\uC6D4", "\uC74C\uB825 2\uC6D4", "\uC74C\uB825 3\uC6D4", "\uC74C\uB825 4\uC6D4", "\uC74C\uB825 5\uC6D4", "\uC74C\uB825 6\uC6D4", "\uC74C\uB825 7\uC6D4", "\uC74C\uB825 8\uC6D4", "\uC74C\uB825 9\uC6D4", "\uC74C\uB825 10\uC6D4", "\uC74C\uB825 11\uC6D4", "\uC74C\uB825 12\uC6D4"],
+    solarMonthNames: ["1\uC6D4", "2\uC6D4", "3\uC6D4", "4\uC6D4", "5\uC6D4", "6\uC6D4", "7\uC6D4", "8\uC6D4", "9\uC6D4", "10\uC6D4", "11\uC6D4", "12\uC6D4"],
+    weekDays: ["\uC77C", "\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0"],
+    leapLabel: "\uC724",
+    yearLabel: "\uB144",
+    monthLabel: "\uC6D4",
+    destiny: "\uBA85"
+  }
+};
+function t(locale) {
+  return translations[locale];
+}
+function getZodiacAnimal(branchIndex, locale = "vi") {
+  return translations[locale].zodiacAnimals[branchIndex % 12];
+}
+
 // src/core/feng-shui.ts
+function mod(n, m) {
+  return (n % m + m) % m;
+}
 function getYearDetails(year) {
-  const stemIndex = (year - 4) % 10;
-  const branchIndex = (year - 4) % 12;
+  const stemIndex = mod(year - 4, 10);
+  const branchIndex = mod(year - 4, 12);
   const stemWeight = getStemWeight(stemIndex);
   const branchWeight = getBranchWeight(branchIndex);
   let elementValue = stemWeight + branchWeight;
@@ -300,24 +373,27 @@ function getYearDetails(year) {
     fullString: `${HEAVENLY_STEMS[stemIndex]} ${EARTHLY_BRANCHES[branchIndex]} - M\u1EC7nh ${FIVE_ELEMENTS[elementIndex]}`
   };
 }
-function getDayCanChi(jd) {
+function getDayCanChi(jd, locale = "vi") {
   const stemIndex = (jd + 9) % 10;
   const branchIndex = (jd + 1) % 12;
-  return `${HEAVENLY_STEMS[stemIndex]} ${EARTHLY_BRANCHES[branchIndex]}`;
+  const { heavenlyStems, earthlyBranches } = t(locale);
+  return `${heavenlyStems[stemIndex]} ${earthlyBranches[branchIndex]}`;
 }
-function getMonthCanChi(lunarMonth, lunarYear) {
+function getMonthCanChi(lunarMonth, lunarYear, locale = "vi") {
   const yearStemIndex = (lunarYear + 6) % 10;
   const monthStemOffset = yearStemIndex % 5 * 2 + 2;
   const monthStemIndex = (monthStemOffset + lunarMonth - 1) % 10;
   const monthBranchIndex = (lunarMonth + 1) % 12;
-  return `${HEAVENLY_STEMS[monthStemIndex]} ${EARTHLY_BRANCHES[monthBranchIndex]}`;
+  const { heavenlyStems, earthlyBranches } = t(locale);
+  return `${heavenlyStems[monthStemIndex]} ${earthlyBranches[monthBranchIndex]}`;
 }
-function getHourCanChi(hour, dayJd) {
+function getHourCanChi(hour, dayJd, locale = "vi") {
   const hourBranchIndex = Math.floor((hour + 1) / 2) % 12;
   const dayStemIndex = (dayJd + 9) % 10;
   const hourStemOffset = dayStemIndex % 5 * 2;
   const hourStemIndex = (hourStemOffset + hourBranchIndex) % 10;
-  return `${HEAVENLY_STEMS[hourStemIndex]} ${EARTHLY_BRANCHES[hourBranchIndex]}`;
+  const { heavenlyStems, earthlyBranches } = t(locale);
+  return `${heavenlyStems[hourStemIndex]} ${earthlyBranches[hourBranchIndex]}`;
 }
 var AUSPICIOUS_HOURS_TABLE = [
   [0, 1, 3, 6, 7, 9],
@@ -333,11 +409,17 @@ var AUSPICIOUS_HOURS_TABLE = [
   [2, 5, 6, 8, 11, 0]
   // Ngày Tỵ (5) / Hợi (11)
 ];
-function getAuspiciousHours(dayJd) {
+function getAuspiciousHours(dayJd, locale = "vi") {
   const branchIndex = (dayJd + 1) % 12;
   const groupIndex = branchIndex % 6;
   const hourIndices = AUSPICIOUS_HOURS_TABLE[groupIndex];
-  return hourIndices.map((i) => EARTHLY_BRANCHES[i]);
+  const { earthlyBranches } = t(locale);
+  return hourIndices.map((i) => earthlyBranches[i]);
+}
+function getAuspiciousHourIndices(dayJd) {
+  const branchIndex = (dayJd + 1) % 12;
+  const groupIndex = branchIndex % 6;
+  return [...AUSPICIOUS_HOURS_TABLE[groupIndex]];
 }
 
 // src/utils/format.ts
@@ -396,7 +478,7 @@ function getDayName(day) {
   }
   return "Ba M\u01B0\u01A1i";
 }
-function formatLunarDate(lunar, pattern) {
+function formatLunarDate(lunar, pattern, locale = "vi") {
   let result = pattern;
   result = result.replace(/yyyy/g, String(lunar.year));
   result = result.replace(/yy/g, String(lunar.year).slice(-2));
@@ -405,7 +487,7 @@ function formatLunarDate(lunar, pattern) {
   result = result.replace(/CC/g, lunar.yearCanChi ?? "");
   result = result.replace(/DC/g, lunar.dayCanChi ?? "");
   result = result.replace(/MC/g, lunar.monthCanChi ?? "");
-  result = result.replace(/L/g, lunar.isLeap ? "Nhu\u1EADn" : "");
+  result = result.replace(/L/g, lunar.isLeap ? t(locale).leapLabel : "");
   result = result.replace(/(?<![0-9])d(?![0-9d])/g, String(lunar.day));
   result = result.replace(/(?<![0-9])M(?![0-9MC])/g, String(lunar.month));
   return result.trim();
@@ -418,68 +500,52 @@ function formatTraditional(lunar) {
   return `${dayName} th\xE1ng ${monthName}${leapSuffix} n\u0103m ${yearCanChi}`.trim();
 }
 
-// src/constants/i18n.ts
-var translations = {
-  vi: {
-    heavenlyStems: ["Gi\xE1p", "\u1EA4t", "B\xEDnh", "\u0110inh", "M\u1EADu", "K\u1EF7", "Canh", "T\xE2n", "Nh\xE2m", "Qu\xFD"],
-    earthlyBranches: ["T\xFD", "S\u1EEDu", "D\u1EA7n", "M\xE3o", "Th\xECn", "T\u1EF5", "Ng\u1ECD", "M\xF9i", "Th\xE2n", "D\u1EADu", "Tu\u1EA5t", "H\u1EE3i"],
-    fiveElements: ["Kim", "M\u1ED9c", "Th\u1EE7y", "H\u1ECFa", "Th\u1ED5"],
-    zodiacAnimals: ["Chu\u1ED9t", "Tr\xE2u", "C\u1ECDp", "Th\u1ECF", "R\u1ED3ng", "R\u1EAFn", "Ng\u1EF1a", "D\xEA", "Kh\u1EC9", "G\xE0", "Ch\xF3", "Heo"],
-    monthNames: ["Gi\xEAng", "Hai", "Ba", "T\u01B0", "N\u0103m", "S\xE1u", "B\u1EA3y", "T\xE1m", "Ch\xEDn", "M\u01B0\u1EDDi", "M\u1ED9t", "Ch\u1EA1p"],
-    weekDays: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-    leapLabel: "Nhu\u1EADn",
-    yearLabel: "N\u0103m",
-    monthLabel: "Th\xE1ng",
-    destiny: "M\u1EC7nh"
-  },
-  en: {
-    heavenlyStems: ["Gi\xE1p", "\u1EA4t", "B\xEDnh", "\u0110inh", "M\u1EADu", "K\u1EF7", "Canh", "T\xE2n", "Nh\xE2m", "Qu\xFD"],
-    earthlyBranches: ["T\xFD", "S\u1EEDu", "D\u1EA7n", "M\xE3o", "Th\xECn", "T\u1EF5", "Ng\u1ECD", "M\xF9i", "Th\xE2n", "D\u1EADu", "Tu\u1EA5t", "H\u1EE3i"],
-    fiveElements: ["Metal", "Wood", "Water", "Fire", "Earth"],
-    zodiacAnimals: ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"],
-    monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    weekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    leapLabel: "Leap",
-    yearLabel: "Year",
-    monthLabel: "Month",
-    destiny: "Destiny"
-  },
-  ja: {
-    heavenlyStems: ["\u7532", "\u4E59", "\u4E19", "\u4E01", "\u620A", "\u5DF1", "\u5E9A", "\u8F9B", "\u58EC", "\u7678"],
-    earthlyBranches: ["\u5B50", "\u4E11", "\u5BC5", "\u536F", "\u8FB0", "\u5DF3", "\u5348", "\u672A", "\u7533", "\u9149", "\u620C", "\u4EA5"],
-    fiveElements: ["\u91D1", "\u6728", "\u6C34", "\u706B", "\u571F"],
-    zodiacAnimals: ["\u9F20", "\u725B", "\u864E", "\u514E", "\u7ADC", "\u86C7", "\u99AC", "\u7F8A", "\u733F", "\u9D8F", "\u72AC", "\u732A"],
-    monthNames: ["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],
-    weekDays: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
-    leapLabel: "\u958F",
-    yearLabel: "\u5E74",
-    monthLabel: "\u6708",
-    destiny: "\u547D"
-  },
-  ko: {
-    heavenlyStems: ["\uAC11", "\uC744", "\uBCD1", "\uC815", "\uBB34", "\uAE30", "\uACBD", "\uC2E0", "\uC784", "\uACC4"],
-    earthlyBranches: ["\uC790", "\uCD95", "\uC778", "\uBB18", "\uC9C4", "\uC0AC", "\uC624", "\uBBF8", "\uC2E0", "\uC720", "\uC220", "\uD574"],
-    fiveElements: ["\uAE08", "\uBAA9", "\uC218", "\uD654", "\uD1A0"],
-    zodiacAnimals: ["\uC950", "\uC18C", "\uD638\uB791\uC774", "\uD1A0\uB07C", "\uC6A9", "\uBC40", "\uB9D0", "\uC591", "\uC6D0\uC22D\uC774", "\uB2ED", "\uAC1C", "\uB3FC\uC9C0"],
-    monthNames: ["1\uC6D4", "2\uC6D4", "3\uC6D4", "4\uC6D4", "5\uC6D4", "6\uC6D4", "7\uC6D4", "8\uC6D4", "9\uC6D4", "10\uC6D4", "11\uC6D4", "12\uC6D4"],
-    weekDays: ["\uC77C", "\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0"],
-    leapLabel: "\uC724",
-    yearLabel: "\uB144",
-    monthLabel: "\uC6D4",
-    destiny: "\uBA85"
-  }
-};
-function t(locale) {
-  return translations[locale];
+// src/utils/calendar-grid.ts
+function dateKey(date) {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
-function getZodiacAnimal(branchIndex, locale = "vi") {
-  return translations[locale].zodiacAnimals[branchIndex % 12];
+function getCalendarGrid(month, year, selectedDate) {
+  const grid = [];
+  const firstDay = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0);
+  const startingDayOfWeek = firstDay.getDay();
+  const daysInMonth = lastDay.getDate();
+  const todayKey = dateKey(/* @__PURE__ */ new Date());
+  const selectedKey = selectedDate ? dateKey(selectedDate) : "";
+  const prevMonthLastDay = new Date(year, month - 1, 0).getDate();
+  const pushCell = (solar, d, m, y, isCurrentMonth) => {
+    grid.push({
+      solar,
+      lunar: LichTa.toLunar(d, m, y),
+      isToday: dateKey(solar) === todayKey,
+      isSelected: dateKey(solar) === selectedKey,
+      isCurrentMonth
+    });
+  };
+  for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+    const d = prevMonthLastDay - i;
+    const m = month - 1 < 1 ? 12 : month - 1;
+    const y = month - 1 < 1 ? year - 1 : year;
+    pushCell(new Date(y, m - 1, d), d, m, y, false);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    pushCell(new Date(year, month - 1, d), d, month, year, true);
+  }
+  const remaining = 42 - grid.length;
+  for (let d = 1; d <= remaining; d++) {
+    const m = month + 1 > 12 ? 1 : month + 1;
+    const y = month + 1 > 12 ? year + 1 : year;
+    pushCell(new Date(y, m - 1, d), d, m, y, false);
+  }
+  return grid;
 }
 export {
   LichTa,
   formatLunarDate,
   formatTraditional,
+  getAuspiciousHourIndices,
   getAuspiciousHours,
+  getCalendarGrid,
   getDayCanChi,
   getDayName,
   getHourCanChi,

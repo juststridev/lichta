@@ -1,16 +1,10 @@
-import type { LunarDate } from '@lichta/core';
+import type { LunarDate, CalendarDayCell } from '@lichta/core';
 import type { Snippet } from 'svelte';
 import type { Locale } from '@lichta/core';
 /**
  * Dữ liệu cho mỗi ô ngày trong lưới lịch
  */
-interface DayCellData {
-    solar: Date;
-    lunar: LunarDate;
-    isToday: boolean;
-    isSelected: boolean;
-    isCurrentMonth: boolean;
-}
+type DayCellData = CalendarDayCell;
 interface Props {
     /** Tháng hiển thị (1-12). Mặc định: tháng hiện tại */
     month?: number;

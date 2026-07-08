@@ -6,3 +6,4 @@ export { LichTa, jdFromDate, jdToDate, getYearDetails, getDayCanChi, getMonthCan
 // Xuất bản phần Svelte Component
 export { default as Formatter } from './components/Formatter.svelte';
 export { default as Calendar } from './components/Calendar.svelte';
+export { default as DatePicker } from './components/DatePicker.svelte';

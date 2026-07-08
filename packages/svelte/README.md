@@ -1,8 +1,13 @@
 # @lichta/svelte
 
 [![npm version](https://img.shields.io/npm/v/@lichta/svelte.svg)](https://www.npmjs.com/package/@lichta/svelte)
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+
+🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
 Component `Calendar`/`Formatter` (lịch tháng có ngày âm lịch) cho Svelte 5, đóng gói trên [`@lichta/core`](https://www.npmjs.com/package/@lichta/core).
+
+Package này gồm 3 component: `Calendar` (lịch tháng), `Formatter` (hiển thị ngày âm cho 1 ngày cụ thể), `DatePicker` (input + popover chọn ngày, dựng trên `Calendar`).
 
 Khác với `@lichta/react`/`@lichta/vue`, package này **re-export toàn bộ API của `@lichta/core`** (`LichTa`, `getYearDetails`, `formatTraditional`, `t`, ...) — bạn không cần cài `@lichta/core` riêng, chỉ cần import thẳng từ `@lichta/svelte`.
 
@@ -69,6 +74,35 @@ Bạn cần cài `svelte` (peer dependency, `^5.0.0`) nếu dự án chưa có.
 | ---------- | --------- | ------------ | -------------------------------- |
 | `date`     | `Date`    | `new Date()` | Ngày dương lịch cần hiển thị     |
 | `children` | `Snippet` | —            | Nội dung tùy chỉnh (render prop) |
+
+### `DatePicker`
+
+```svelte
+<script>
+	import { DatePicker } from '@lichta/svelte';
+	import '@lichta/core/styles/calendar-base.css';
+	import '@lichta/core/styles/calendar-glass.css'; // theme "glass" (tùy chọn)
+	import '@lichta/core/styles/datepicker-base.css';
+	import '@lichta/core/styles/datepicker-glass.css'; // theme "glass" (tùy chọn)
+</script>
+
+<DatePicker theme="glass" locale="vi" onSelect={(date, lunar) => console.log(date, lunar)} />
+```
+
+> ⚠️ Cần import cả CSS của `Calendar` (dùng trong popover) lẫn `DatePicker` (input + popover chrome) — thiếu 1 trong 2 sẽ hiển thị thiếu style.
+
+| Prop        | Kiểu                                     | Mặc định       | Mô tả                                                                  |
+| ----------- | ----------------------------------------- | -------------- | ----------------------------------------------------------------------- |
+| `value`     | `Date \| null`                           | `null`         | Ngày đang chọn (uncontrolled — component tự quản lý sau lần mount đầu) |
+| `onSelect`  | `(date: Date, lunar: LunarDate) => void` | —              | Callback khi chọn ngày trong popover                                    |
+| `placeholder` | `string`                                | `'Chọn ngày'`  | Placeholder khi chưa chọn ngày                                          |
+| `locale`    | `'vi' \| 'en' \| 'ja' \| 'ko'`           | `'vi'`         | Ngôn ngữ hiển thị trong popover                                         |
+| `theme`     | `'classic' \| 'glass'`                   | `'classic'`    | Giao diện input + popover                                               |
+| `showLunar` | `boolean`                                 | `true`         | Hiện ngày âm lịch trong popover                                         |
+| `format`    | `(date: Date) => string`                 | `dd/MM/yyyy`   | Hàm format ngày hiển thị trên input                                    |
+| `disabled`  | `boolean`                                 | `false`        | Vô hiệu hoá input                                                       |
+
+Popover tự đóng khi: chọn xong 1 ngày, click ra ngoài, hoặc nhấn phím `Escape`.
 
 ## Dùng logic thuần (không cần component)
 

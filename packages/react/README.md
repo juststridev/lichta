@@ -1,6 +1,9 @@
 # @lichta/react
 
 [![npm version](https://img.shields.io/npm/v/@lichta/react.svg)](https://www.npmjs.com/package/@lichta/react)
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+
+🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
 Component `Calendar` (lịch tháng có ngày âm lịch) cho React, đóng gói trên [`@lichta/core`](https://www.npmjs.com/package/@lichta/core).
 
@@ -63,6 +66,46 @@ export default function App() {
 
 > Lưu ý: `month`/`year` hiện chỉ dùng làm giá trị khởi tạo state nội bộ (uncontrolled) — thay đổi prop sau khi mount chưa tự động cập nhật lại lịch đang hiển thị.
 
+## DatePicker
+
+Component `DatePicker` (input + popover chọn ngày, dựng trên `Calendar` ở trên).
+
+```tsx
+import { DatePicker } from '@lichta/react';
+import '@lichta/core/styles/calendar-base.css';
+import '@lichta/core/styles/calendar-glass.css'; // theme "glass" (tùy chọn)
+import '@lichta/core/styles/datepicker-base.css';
+import '@lichta/core/styles/datepicker-glass.css'; // theme "glass" (tùy chọn)
+
+export default function App() {
+  return (
+    <DatePicker
+      theme="glass"
+      locale="vi"
+      onSelect={(date, lunar) => console.log(date, lunar)}
+    />
+  );
+}
+```
+
+> ⚠️ Cần import cả CSS của `Calendar` (dùng trong popover) lẫn `DatePicker` (input + popover chrome) — thiếu 1 trong 2 sẽ hiển thị thiếu style.
+
+### Props
+
+| Prop | Kiểu | Mặc định | Mô tả |
+|---|---|---|---|
+| `value` | `Date \| null` | `null` | Ngày đang chọn (uncontrolled — component tự quản lý sau lần mount đầu) |
+| `onSelect` | `(date: Date, lunar: LunarDate) => void` | — | Callback khi chọn ngày trong popover |
+| `placeholder` | `string` | `'Chọn ngày'` | Placeholder khi chưa chọn ngày |
+| `locale` | `'vi' \| 'en' \| 'ja' \| 'ko'` | `'vi'` | Ngôn ngữ hiển thị trong popover |
+| `theme` | `'classic' \| 'glass'` | `'classic'` | Giao diện input + popover |
+| `showLunar` | `boolean` | `true` | Hiện ngày âm lịch trong popover |
+| `format` | `(date: Date) => string` | `dd/MM/yyyy` | Hàm format ngày hiển thị trên input |
+| `disabled` | `boolean` | `false` | Vô hiệu hoá input |
+| `className` | `string` | `''` | Class CSS bổ sung cho container |
+
+Popover tự đóng khi: chọn xong 1 ngày, click ra ngoài, hoặc nhấn phím `Escape`.
+
 ## Theming
 
 ```css
@@ -77,6 +120,8 @@ export default function App() {
   --lichta-font: 'Inter', sans-serif;
 }
 ```
+
+`DatePicker` dùng chung biến CSS `--lichta-*` ở trên — không cần custom class riêng.
 
 ## License
 

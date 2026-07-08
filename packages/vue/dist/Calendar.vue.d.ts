@@ -1,18 +1,14 @@
-import { type LunarDate, type Locale } from '@lichta/core';
+import { type LunarDate, type Locale, type CalendarDayCell } from '@lichta/core';
 interface Props {
     month?: number;
     year?: number;
+    /** Ngày được chọn (controlled). Bỏ qua thì Calendar tự quản lý selection nội bộ (uncontrolled). */
+    selectedDate?: Date | null;
     showLunar?: boolean;
     locale?: Locale;
     theme?: 'classic' | 'glass';
 }
-export interface DayCellData {
-    solar: Date;
-    lunar: LunarDate;
-    isToday: boolean;
-    isSelected: boolean;
-    isCurrentMonth: boolean;
-}
+export type DayCellData = CalendarDayCell;
 declare var __VLS_1: {};
 type __VLS_Slots = {} & {
     default?: (props: typeof __VLS_1) => any;
@@ -24,6 +20,7 @@ declare const __VLS_component: import("vue").DefineComponent<Props, {}, {}, {}, 
 }>, {
     month: number;
     year: number;
+    selectedDate: Date | null;
     showLunar: boolean;
     locale: Locale;
     theme: "classic" | "glass";

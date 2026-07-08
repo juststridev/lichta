@@ -1,6 +1,9 @@
 # @lichta/event-calendar
 
 [![npm version](https://img.shields.io/npm/v/@lichta/event-calendar.svg)](https://www.npmjs.com/package/@lichta/event-calendar)
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+
+🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
 Plugin/Adapter tích hợp lịch âm Việt Nam (LichTa) vào thư viện [EventCalendar](https://github.com/vkurko/calendar).
 

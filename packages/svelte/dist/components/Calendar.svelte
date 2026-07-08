@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { LichTa, getYearDetails } from '@lichta/core';
-	import type { LunarDate } from '@lichta/core';
+	import { getYearDetails, getCalendarGrid, t } from '@lichta/core';
+	import type { LunarDate, CalendarDayCell } from '@lichta/core';
 	import type { Snippet } from 'svelte';
 	import { untrack } from 'svelte';
 
@@ -9,13 +9,7 @@
 	/**
 	 * Dữ liệu cho mỗi ô ngày trong lưới lịch
 	 */
-	interface DayCellData {
-		solar: Date;
-		lunar: LunarDate;
-		isToday: boolean;
-		isSelected: boolean;
-		isCurrentMonth: boolean;
-	}
+	type DayCellData = CalendarDayCell;
 
 	interface Props {
 		/** Tháng hiển thị (1-12). Mặc định: tháng hiện tại */
@@ -66,109 +60,16 @@
 	});
 
 	// Tên thứ trong tuần
-	const weekDayLabels = $derived(
-		locale === 'vi'
-			? ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
-			: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-	);
+	const weekDayLabels = $derived(t(locale).weekDays);
 
-	// Tên tháng hiển thị
-	const monthNames = [
-		'Tháng 1',
-		'Tháng 2',
-		'Tháng 3',
-		'Tháng 4',
-		'Tháng 5',
-		'Tháng 6',
-		'Tháng 7',
-		'Tháng 8',
-		'Tháng 9',
-		'Tháng 10',
-		'Tháng 11',
-		'Tháng 12'
-	];
+	// Tên tháng dương lịch cho phần header điều hướng
+	const monthNames = $derived(t(locale).solarMonthNames);
 
 	// Can Chi năm hiển thị
 	let yearInfo = $derived(getYearDetails(currentYear));
 
-	// Ngày hôm nay
-	const today = new Date();
-	const todayStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-
 	// Tính grid lịch 6x7 = 42 ô
-	let calendarGrid = $derived.by((): DayCellData[] => {
-		const grid: DayCellData[] = [];
-
-		// Ngày đầu tiên của tháng
-		const firstDay = new Date(currentYear, currentMonth - 1, 1);
-		// Thứ của ngày đầu tiên (0=CN, 1=T2, ...)
-		const startDayOfWeek = firstDay.getDay();
-		// Số ngày trong tháng
-		const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-
-		// Padding ngày tháng trước
-		const prevMonthDays = new Date(currentYear, currentMonth - 1, 0).getDate();
-		for (let i = startDayOfWeek - 1; i >= 0; i--) {
-			const d = prevMonthDays - i;
-			const m = currentMonth - 1 <= 0 ? 12 : currentMonth - 1;
-			const y = currentMonth - 1 <= 0 ? currentYear - 1 : currentYear;
-			const solar = new Date(y, m - 1, d);
-			const lunar = LichTa.toLunar(d, m, y);
-			const dateStr = `${y}-${m}-${d}`;
-			const selStr = selectedDate
-				? `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
-				: '';
-
-			grid.push({
-				solar,
-				lunar,
-				isToday: dateStr === todayStr,
-				isSelected: dateStr === selStr,
-				isCurrentMonth: false
-			});
-		}
-
-		// Ngày trong tháng hiện tại
-		for (let d = 1; d <= daysInMonth; d++) {
-			const solar = new Date(currentYear, currentMonth - 1, d);
-			const lunar = LichTa.toLunar(d, currentMonth, currentYear);
-			const dateStr = `${currentYear}-${currentMonth}-${d}`;
-			const selStr = selectedDate
-				? `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
-				: '';
-
-			grid.push({
-				solar,
-				lunar,
-				isToday: dateStr === todayStr,
-				isSelected: dateStr === selStr,
-				isCurrentMonth: true
-			});
-		}
-
-		// Padding ngày tháng sau
-		const remaining = 42 - grid.length;
-		for (let d = 1; d <= remaining; d++) {
-			const m = currentMonth + 1 > 12 ? 1 : currentMonth + 1;
-			const y = currentMonth + 1 > 12 ? currentYear + 1 : currentYear;
-			const solar = new Date(y, m - 1, d);
-			const lunar = LichTa.toLunar(d, m, y);
-			const dateStr = `${y}-${m}-${d}`;
-			const selStr = selectedDate
-				? `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
-				: '';
-
-			grid.push({
-				solar,
-				lunar,
-				isToday: dateStr === todayStr,
-				isSelected: dateStr === selStr,
-				isCurrentMonth: false
-			});
-		}
-
-		return grid;
-	});
+	let calendarGrid = $derived(getCalendarGrid(currentMonth, currentYear, selectedDate));
 
 	// Navigation
 	function prevMonth() {
@@ -262,202 +163,3 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-	.lich-ta-calendar {
-		--lichta-primary: #d4a373;
-		--lichta-primary-light: #f5e6d3;
-		--lichta-bg: #fffcf7;
-		--lichta-surface: #ffffff;
-		--lichta-text: #2c1810;
-		--lichta-text-muted: #8b7355;
-		--lichta-text-dim: #c4b5a0;
-		--lichta-border: #e8ddd0;
-		--lichta-today-bg: #d4a373;
-		--lichta-today-text: #ffffff;
-		--lichta-selected-bg: #a0522d;
-		--lichta-selected-text: #ffffff;
-		--lichta-hover-bg: #f5e6d3;
-		--lichta-lunar-text: #b08968;
-		--lichta-first-lunar: #c2185b;
-		--lichta-radius: 8px;
-		--lichta-font: inherit;
-
-		font-family: var(--lichta-font);
-		background: var(--lichta-bg);
-		border: 1px solid var(--lichta-border);
-		border-radius: calc(var(--lichta-radius) * 2);
-		padding: 16px;
-		max-width: 420px;
-		width: 100%;
-		box-sizing: border-box;
-		user-select: none;
-	}
-
-	/* Header */
-	.lich-ta-calendar-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 16px;
-	}
-
-	.lich-ta-calendar-nav {
-		background: none;
-		border: 1px solid var(--lichta-border);
-		border-radius: var(--lichta-radius);
-		width: 36px;
-		height: 36px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		color: var(--lichta-text);
-		font-size: 0.85rem;
-		transition: all 0.15s ease;
-	}
-
-	.lich-ta-calendar-nav:hover {
-		background: var(--lichta-hover-bg);
-		border-color: var(--lichta-primary);
-	}
-
-	.lich-ta-calendar-title {
-		text-align: center;
-	}
-
-	.lich-ta-calendar-month-year {
-		display: block;
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--lichta-text);
-	}
-
-	.lich-ta-calendar-canchi {
-		display: block;
-		font-size: 0.8rem;
-		color: var(--lichta-text-muted);
-		margin-top: 2px;
-	}
-
-	/* Weekdays */
-	.lich-ta-calendar-weekdays {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		margin-bottom: 4px;
-	}
-
-	.lich-ta-calendar-weekday {
-		text-align: center;
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: var(--lichta-text-muted);
-		padding: 6px 0;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-	}
-
-	/* Grid */
-	.lich-ta-calendar-grid {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		gap: 2px;
-	}
-
-	.lich-ta-calendar-day {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 6px 2px;
-		min-height: 48px;
-		border: none;
-		border-radius: var(--lichta-radius);
-		background: transparent;
-		cursor: pointer;
-		transition: all 0.15s ease;
-		font-family: inherit;
-	}
-
-	.lich-ta-calendar-day:hover {
-		background: var(--lichta-hover-bg);
-	}
-
-	.lich-ta-calendar-day:focus-visible {
-		outline: 2px solid var(--lichta-primary);
-		outline-offset: 1px;
-	}
-
-	.solar-day {
-		font-size: 0.95rem;
-		font-weight: 500;
-		color: var(--lichta-text);
-		line-height: 1.2;
-	}
-
-	.lunar-day {
-		font-size: 0.65rem;
-		color: var(--lichta-lunar-text);
-		line-height: 1.2;
-		margin-top: 1px;
-	}
-
-	/* States */
-	.is-other-month .solar-day {
-		color: var(--lichta-text-dim);
-	}
-
-	.is-other-month .lunar-day {
-		color: var(--lichta-text-dim);
-	}
-
-	.is-today {
-		background: var(--lichta-today-bg);
-	}
-
-	.is-today .solar-day {
-		color: var(--lichta-today-text);
-		font-weight: 700;
-	}
-
-	.is-today .lunar-day {
-		color: var(--lichta-today-text);
-		opacity: 0.85;
-	}
-
-	.is-today:hover {
-		background: var(--lichta-today-bg);
-		opacity: 0.9;
-	}
-
-	.is-selected {
-		background: var(--lichta-selected-bg);
-	}
-
-	.is-selected .solar-day {
-		color: var(--lichta-selected-text);
-		font-weight: 700;
-	}
-
-	.is-selected .lunar-day {
-		color: var(--lichta-selected-text);
-		opacity: 0.85;
-	}
-
-	.is-first-lunar .lunar-day {
-		color: var(--lichta-first-lunar);
-		font-weight: 600;
-	}
-
-	.is-today.is-first-lunar .lunar-day,
-	.is-selected.is-first-lunar .lunar-day {
-		color: var(--lichta-today-text);
-	}
-
-	/* Footer */
-	.lich-ta-calendar-footer {
-		margin-top: 12px;
-		padding-top: 12px;
-		border-top: 1px solid var(--lichta-border);
-	}
-</style>

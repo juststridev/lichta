@@ -8,7 +8,7 @@
   --lichta-text-dim: #c4b5a0;
   --lichta-border: #e8ddd0;
   --lichta-today-bg: #d4a373;
-  --lichta-today-text: #ffffff;
+  --lichta-today-text: #a0522d;
   --lichta-selected-bg: #a0522d;
   --lichta-selected-text: #ffffff;
   --lichta-hover-bg: #f5e6d3;
@@ -16,13 +16,14 @@
   --lichta-first-lunar: #c2185b;
   --lichta-radius: 8px;
   --lichta-font: inherit;
+  --lichta-max-width: 420px;
 
   font-family: var(--lichta-font);
   background: var(--lichta-bg);
   border: 1px solid var(--lichta-border);
   border-radius: calc(var(--lichta-radius) * 2);
   padding: 16px;
-  max-width: 420px;
+  max-width: var(--lichta-max-width);
   width: 100%;
   box-sizing: border-box;
   user-select: none;
@@ -91,7 +92,7 @@
 
 .lich-ta-calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 2px;
 }
 
@@ -101,7 +102,8 @@
   align-items: center;
   justify-content: center;
   padding: 6px 2px;
-  min-height: 48px;
+  aspect-ratio: 1;
+  overflow: hidden;
   border: none;
   border-radius: var(--lichta-radius);
   background: transparent;
@@ -112,6 +114,7 @@
 
 .lich-ta-calendar-day:hover {
   background: var(--lichta-hover-bg);
+  color: var(--lichta-text-muted) !important;
 }
 
 .lich-ta-calendar-day:focus-visible {
@@ -163,12 +166,10 @@
 
 .is-selected .solar-day {
   color: var(--lichta-selected-text);
-  font-weight: 700;
 }
 
 .is-selected .lunar-day {
   color: var(--lichta-selected-text);
-  opacity: 0.85;
 }
 
 .is-first-lunar .lunar-day {

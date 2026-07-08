@@ -1,6 +1,9 @@
 # lichta (legacy)
 
 [![npm version](https://img.shields.io/npm/v/lichta.svg)](https://www.npmjs.com/package/lichta)
+[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+
+🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
 > ⚠️ **Package này đã deprecated.** Đây là tên npm cũ của thư viện trước khi đổi sang các package có scope `@lichta/*`. Đừng cài package này cho dự án mới — xem bảng bên dưới để chọn đúng package thay thế.
 
