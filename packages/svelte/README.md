@@ -1,7 +1,7 @@
 # @lichta/svelte
 
-[![npm version](https://img.shields.io/npm/v/@lichta/svelte.svg)](https://www.npmjs.com/package/@lichta/svelte)
-[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+[![@lichta/svelte](https://img.shields.io/npm/v/@lichta/svelte.svg?label=%40lichta%2Fsvelte)](https://www.npmjs.com/package/@lichta/svelte)
+[![@lichta/core](https://img.shields.io/npm/v/@lichta/core.svg?label=%40lichta%2Fcore)](https://www.npmjs.com/package/@lichta/core)
 
 🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
@@ -63,8 +63,11 @@ Bạn cần cài `svelte` (peer dependency, `^5.0.0`) nếu dự án chưa có.
 | `selectedDate` | `Date \| null`                           | `null`         | Ngày được chọn (controlled)       |
 | `showLunar`    | `boolean`                                | `true`         | Hiện ngày âm lịch dưới ngày dương |
 | `locale`       | `'vi' \| 'en' \| 'ja' \| 'ko'`           | `'vi'`         | Ngôn ngữ nhãn thứ trong tuần      |
+| `firstDayOfWeek` | `0 \| 1`                                | `0`            | Ngày bắt đầu tuần: `0` = Chủ Nhật, `1` = Thứ Hai |
+| `showWeekNumber` | `boolean`                               | `false`        | Hiện số tuần (ISO-8601) ở đầu mỗi hàng |
 | `theme`        | `'classic' \| 'glass'`                   | `'classic'`    | Giao diện lịch                    |
 | `onSelect`     | `(date: Date, lunar: LunarDate) => void` | —              | Callback khi chọn ngày            |
+| `onMonthChange` | `(month: number, year: number) => void` | —             | Callback khi điều hướng tháng qua nút prev/next trong header |
 | `dayCell`      | `Snippet<[DayCellData]>`                 | —              | Custom snippet cho mỗi ô ngày     |
 | `children`     | `Snippet`                                | —              | Nội dung footer tùy chỉnh         |
 
@@ -95,8 +98,10 @@ Bạn cần cài `svelte` (peer dependency, `^5.0.0`) nếu dự án chưa có.
 | ----------- | ----------------------------------------- | -------------- | ----------------------------------------------------------------------- |
 | `value`     | `Date \| null`                           | `null`         | Ngày đang chọn (uncontrolled — component tự quản lý sau lần mount đầu) |
 | `onSelect`  | `(date: Date, lunar: LunarDate) => void` | —              | Callback khi chọn ngày trong popover                                    |
+| `onMonthChange` | `(month: number, year: number) => void` | —          | Callback khi điều hướng tháng qua nút prev/next trong popover           |
 | `placeholder` | `string`                                | `'Chọn ngày'`  | Placeholder khi chưa chọn ngày                                          |
 | `locale`    | `'vi' \| 'en' \| 'ja' \| 'ko'`           | `'vi'`         | Ngôn ngữ hiển thị trong popover                                         |
+| `firstDayOfWeek` | `0 \| 1`                             | `0`            | Ngày bắt đầu tuần: `0` = Chủ Nhật, `1` = Thứ Hai                        |
 | `theme`     | `'classic' \| 'glass'`                   | `'classic'`    | Giao diện input + popover                                               |
 | `showLunar` | `boolean`                                 | `true`         | Hiện ngày âm lịch trong popover                                         |
 | `format`    | `(date: Date) => string`                 | `dd/MM/yyyy`   | Hàm format ngày hiển thị trên input                                    |

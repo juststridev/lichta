@@ -1,9 +1,10 @@
 {
   "name": "@lichta/core",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Thư viện lõi tính toán Dương lịch ↔ Âm lịch Việt Nam",
   "author": "Zeforc Labs | Stridev",
   "license": "MIT",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

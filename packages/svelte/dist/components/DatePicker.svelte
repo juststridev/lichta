@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { getYearDetails, getCalendarGrid, t } from '@lichta/core';
-	import type { LunarDate, Locale, CalendarDayCell } from '@lichta/core';
+	import { getYearDetails, getCalendarGrid, getWeekDayLabels, t } from '@lichta/core';
+	import type { LunarDate, Locale, CalendarDayCell, FirstDayOfWeek } from '@lichta/core';
 
 	interface Props {
 		/** Ngày đang chọn (uncontrolled — component tự quản lý sau lần mount đầu) */
 		value?: Date | null;
 		/** Gọi khi người dùng chọn 1 ngày trong popover */
 		onSelect?: (date: Date, lunar: LunarDate) => void;
+		/** Callback khi user điều hướng tháng qua nút prev/next trong popover */
+		onMonthChange?: (month: number, year: number) => void;
 		placeholder?: string;
 		locale?: Locale;
+		/** Ngày bắt đầu tuần: 0 = Chủ Nhật (mặc định), 1 = Thứ Hai */
+		firstDayOfWeek?: FirstDayOfWeek;
 		theme?: 'classic' | 'glass';
 		showLunar?: boolean;
 		format?: (date: Date) => string;
@@ -24,8 +28,10 @@
 	let {
 		value = null,
 		onSelect,
+		onMonthChange,
 		placeholder = 'Chọn ngày',
 		locale = 'vi',
+		firstDayOfWeek = 0,
 		theme = 'classic',
 		showLunar = true,
 		format = defaultFormat,
@@ -53,10 +59,10 @@
 		}
 	});
 
-	const weekDayLabels = $derived(t(locale).weekDays);
+	const weekDayLabels = $derived(getWeekDayLabels(locale, firstDayOfWeek));
 	const monthNames = $derived(t(locale).solarMonthNames);
 	let yearInfo = $derived(getYearDetails(viewYear));
-	let grid = $derived(getCalendarGrid(viewMonth, viewYear, selected));
+	let grid = $derived(getCalendarGrid(viewMonth, viewYear, selected, firstDayOfWeek));
 	const displayValue = $derived(selected ? format(selected) : '');
 
 	function toggleOpen() {
@@ -64,21 +70,19 @@
 	}
 
 	function prevMonth() {
-		if (viewMonth === 1) {
-			viewMonth = 12;
-			viewYear -= 1;
-		} else {
-			viewMonth -= 1;
-		}
+		const newMonth = viewMonth === 1 ? 12 : viewMonth - 1;
+		const newYear = viewMonth === 1 ? viewYear - 1 : viewYear;
+		viewMonth = newMonth;
+		viewYear = newYear;
+		onMonthChange?.(newMonth, newYear);
 	}
 
 	function nextMonth() {
-		if (viewMonth === 12) {
-			viewMonth = 1;
-			viewYear += 1;
-		} else {
-			viewMonth += 1;
-		}
+		const newMonth = viewMonth === 12 ? 1 : viewMonth + 1;
+		const newYear = viewMonth === 12 ? viewYear + 1 : viewYear;
+		viewMonth = newMonth;
+		viewYear = newYear;
+		onMonthChange?.(newMonth, newYear);
 	}
 
 	function handleDaySelect(cell: CalendarDayCell) {

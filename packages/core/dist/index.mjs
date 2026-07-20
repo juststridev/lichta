@@ -11,9 +11,6 @@ var HEAVENLY_STEMS = [
   "Nh\xE2m",
   "Qu\xFD"
 ];
-function getStemWeight(index) {
-  return Math.floor(index / 2) + 1;
-}
 
 // src/constants/earthly-branches.ts
 var EARTHLY_BRANCHES = [
@@ -30,12 +27,8 @@ var EARTHLY_BRANCHES = [
   "Tu\u1EA5t",
   "H\u1EE3i"
 ];
-function getBranchWeight(index) {
-  const normalizedIndex = index % 6;
-  return Math.floor(normalizedIndex / 2);
-}
 
-// src/core/lunar.ts
+// src/core/astronomical.ts
 var PI = Math.PI;
 function INT(d) {
   return Math.floor(d);
@@ -91,7 +84,7 @@ function NewMoon(k) {
 function getNewMoonDay(k, timeZone) {
   return INT(NewMoon(k) + 0.5 + timeZone / 24);
 }
-function getSunLongitude(jdn, timeZone) {
+function sunLongitudeDegrees(jdn, timeZone) {
   const T = (jdn - 24515455e-1 - timeZone / 24) / 36525;
   const T2 = T * T;
   const dr = PI / 180;
@@ -101,11 +94,22 @@ function getSunLongitude(jdn, timeZone) {
   DL = DL + (0.019993 - 101e-6 * T) * Math.sin(dr * 2 * M) + 29e-5 * Math.sin(dr * 3 * M);
   let L = L0 + DL;
   L = L - 360 * INT(L / 360);
-  return INT(L / 30);
+  return L;
+}
+function getSunLongitude(jdn, timeZone) {
+  return INT(sunLongitudeDegrees(jdn, timeZone) / 30);
+}
+function getSolarTermIndex(jdn, timeZone) {
+  return INT(sunLongitudeDegrees(jdn, timeZone) / 15);
+}
+
+// src/core/calendar-engine.ts
+function INT2(d) {
+  return Math.floor(d);
 }
 function getLunarMonth11(yy, timeZone) {
   const off = jdFromDate(31, 12, yy) - 2415021076998695e-9;
-  const k = INT(off / 29.530588853);
+  const k = INT2(off / 29.530588853);
   let nm = getNewMoonDay(k, timeZone);
   const sunLong = getSunLongitude(nm, timeZone);
   if (sunLong >= 9) {
@@ -114,7 +118,7 @@ function getLunarMonth11(yy, timeZone) {
   return nm;
 }
 function getLeapMonthOffset(a11, timeZone) {
-  const k = INT((a11 - 2415021076998695e-9) / 29.530588853 + 0.5);
+  const k = INT2((a11 - 2415021076998695e-9) / 29.530588853 + 0.5);
   let last;
   let i = 1;
   let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
@@ -178,7 +182,7 @@ var LichTa = class {
       throw new RangeError(`Lichta: Day must be between 1 and 31, got ${day}`);
     }
     const dayNumber = jdFromDate(day, month, year);
-    const k = INT((dayNumber - 2415021076998695e-9) / 29.530588853);
+    const k = INT2((dayNumber - 2415021076998695e-9) / 29.530588853);
     let monthStart = getNewMoonDay(k + 1, timeZone);
     if (monthStart > dayNumber) {
       monthStart = getNewMoonDay(k, timeZone);
@@ -194,7 +198,7 @@ var LichTa = class {
       b11 = getLunarMonth11(year + 1, timeZone);
     }
     const lunarDay = dayNumber - monthStart + 1;
-    const diff = INT((monthStart - a11) / 29);
+    const diff = INT2((monthStart - a11) / 29);
     let lunarLeap = false;
     let lunarMonth = diff + 11;
     if (b11 - a11 > 365) {
@@ -255,7 +259,7 @@ var LichTa = class {
       a11 = getLunarMonth11(lunarYear, timeZone);
       b11 = getLunarMonth11(lunarYear + 1, timeZone);
     }
-    const k = INT(0.5 + (a11 - 2415021076998695e-9) / 29.530588853);
+    const k = INT2(0.5 + (a11 - 2415021076998695e-9) / 29.530588853);
     let off = lunarMonth - 11;
     if (off < 0) {
       off += 12;
@@ -279,9 +283,6 @@ var LichTa = class {
   }
 };
 
-// src/constants/five-elements.ts
-var FIVE_ELEMENTS = ["Kim", "M\u1ED9c", "Th\u1EE7y", "H\u1ECFa", "Th\u1ED5"];
-
 // src/constants/i18n.ts
 var translations = {
   vi: {
@@ -297,7 +298,40 @@ var translations = {
     leapLabel: "Nhu\u1EADn",
     yearLabel: "N\u0103m",
     monthLabel: "Th\xE1ng",
-    destiny: "M\u1EC7nh"
+    destiny: "M\u1EC7nh",
+    // Thứ tự bắt đầu từ Xuân Phân (kinh độ Mặt Trời 0°), xem getSolarTermIndex trong lunar.ts
+    solarTermNames: [
+      "Xu\xE2n Ph\xE2n",
+      "Thanh Minh",
+      "C\u1ED1c V\u0169",
+      "L\u1EADp H\u1EA1",
+      "Ti\u1EC3u M\xE3n",
+      "Mang Ch\u1EE7ng",
+      "H\u1EA1 Ch\xED",
+      "Ti\u1EC3u Th\u1EED",
+      "\u0110\u1EA1i Th\u1EED",
+      "L\u1EADp Thu",
+      "X\u1EED Th\u1EED",
+      "B\u1EA1ch L\u1ED9",
+      "Thu Ph\xE2n",
+      "H\xE0n L\u1ED9",
+      "S\u01B0\u01A1ng Gi\xE1ng",
+      "L\u1EADp \u0110\xF4ng",
+      "Ti\u1EC3u Tuy\u1EBFt",
+      "\u0110\u1EA1i Tuy\u1EBFt",
+      "\u0110\xF4ng Ch\xED",
+      "Ti\u1EC3u H\xE0n",
+      "\u0110\u1EA1i H\xE0n",
+      "L\u1EADp Xu\xE2n",
+      "V\u0169 Th\u1EE7y",
+      "Kinh Tr\u1EADp"
+    ],
+    // Thứ tự bắt đầu từ Kiến (0), xem getTrucIndex trong feng-shui.ts
+    trucNames: ["Ki\u1EBFn", "Tr\u1EEB", "M\xE3n", "B\xECnh", "\u0110\u1ECBnh", "Ch\u1EA5p", "Ph\xE1", "Nguy", "Th\xE0nh", "Thu", "Khai", "B\u1EBF"],
+    // Thứ tự: sinh, được sinh, khắc, bị khắc, hòa — xem getElementRelationIndex trong feng-shui.ts
+    elementRelationNames: ["T\u01B0\u01A1ng sinh", "\u0110\u01B0\u1EE3c sinh", "T\u01B0\u01A1ng kh\u1EAFc", "B\u1ECB kh\u1EAFc", "T\u01B0\u01A1ng h\xF2a"],
+    // Thứ tự: xấu, trung bình, tốt — xem getTrucQualityIndex trong feng-shui.ts
+    trucQualityNames: ["X\u1EA5u", "Trung b\xECnh", "T\u1ED1t"]
   },
   en: {
     heavenlyStems: ["Gi\xE1p", "\u1EA4t", "B\xEDnh", "\u0110inh", "M\u1EADu", "K\u1EF7", "Canh", "T\xE2n", "Nh\xE2m", "Qu\xFD"],
@@ -312,7 +346,36 @@ var translations = {
     leapLabel: "Leap",
     yearLabel: "Year",
     monthLabel: "Month",
-    destiny: "Destiny"
+    destiny: "Destiny",
+    solarTermNames: [
+      "Spring Equinox",
+      "Clear and Bright",
+      "Grain Rain",
+      "Start of Summer",
+      "Grain Full",
+      "Grain in Ear",
+      "Summer Solstice",
+      "Minor Heat",
+      "Major Heat",
+      "Start of Autumn",
+      "End of Heat",
+      "White Dew",
+      "Autumn Equinox",
+      "Cold Dew",
+      "Frost's Descent",
+      "Start of Winter",
+      "Minor Snow",
+      "Major Snow",
+      "Winter Solstice",
+      "Minor Cold",
+      "Major Cold",
+      "Start of Spring",
+      "Rain Water",
+      "Awakening of Insects"
+    ],
+    trucNames: ["Ki\u1EBFn", "Tr\u1EEB", "M\xE3n", "B\xECnh", "\u0110\u1ECBnh", "Ch\u1EA5p", "Ph\xE1", "Nguy", "Th\xE0nh", "Thu", "Khai", "B\u1EBF"],
+    elementRelationNames: ["Generates", "Generated By", "Overcomes", "Overcome By", "Same Element"],
+    trucQualityNames: ["Bad", "Neutral", "Good"]
   },
   ja: {
     heavenlyStems: ["\u7532", "\u4E59", "\u4E19", "\u4E01", "\u620A", "\u5DF1", "\u5E9A", "\u8F9B", "\u58EC", "\u7678"],
@@ -327,7 +390,36 @@ var translations = {
     leapLabel: "\u958F",
     yearLabel: "\u5E74",
     monthLabel: "\u6708",
-    destiny: "\u547D"
+    destiny: "\u547D",
+    solarTermNames: [
+      "\u6625\u5206",
+      "\u6E05\u660E",
+      "\u7A40\u96E8",
+      "\u7ACB\u590F",
+      "\u5C0F\u6E80",
+      "\u8292\u7A2E",
+      "\u590F\u81F3",
+      "\u5C0F\u6691",
+      "\u5927\u6691",
+      "\u7ACB\u79CB",
+      "\u51E6\u6691",
+      "\u767D\u9732",
+      "\u79CB\u5206",
+      "\u5BD2\u9732",
+      "\u971C\u964D",
+      "\u7ACB\u51AC",
+      "\u5C0F\u96EA",
+      "\u5927\u96EA",
+      "\u51AC\u81F3",
+      "\u5C0F\u5BD2",
+      "\u5927\u5BD2",
+      "\u7ACB\u6625",
+      "\u96E8\u6C34",
+      "\u5553\u87C4"
+    ],
+    trucNames: ["\u5EFA", "\u9664", "\u6E80", "\u5E73", "\u5B9A", "\u57F7", "\u7834", "\u5371", "\u6210", "\u53CE", "\u958B", "\u9589"],
+    elementRelationNames: ["\u76F8\u751F", "\u88AB\u751F", "\u76F8\u514B", "\u88AB\u514B", "\u6BD4\u548C"],
+    trucQualityNames: ["\u51F6", "\u666E\u901A", "\u5409"]
   },
   ko: {
     heavenlyStems: ["\uAC11", "\uC744", "\uBCD1", "\uC815", "\uBB34", "\uAE30", "\uACBD", "\uC2E0", "\uC784", "\uACC4"],
@@ -342,7 +434,36 @@ var translations = {
     leapLabel: "\uC724",
     yearLabel: "\uB144",
     monthLabel: "\uC6D4",
-    destiny: "\uBA85"
+    destiny: "\uBA85",
+    solarTermNames: [
+      "\uCD98\uBD84",
+      "\uCCAD\uBA85",
+      "\uACE1\uC6B0",
+      "\uC785\uD558",
+      "\uC18C\uB9CC",
+      "\uB9DD\uC885",
+      "\uD558\uC9C0",
+      "\uC18C\uC11C",
+      "\uB300\uC11C",
+      "\uC785\uCD94",
+      "\uCC98\uC11C",
+      "\uBC31\uB85C",
+      "\uCD94\uBD84",
+      "\uD55C\uB85C",
+      "\uC0C1\uAC15",
+      "\uC785\uB3D9",
+      "\uC18C\uC124",
+      "\uB300\uC124",
+      "\uB3D9\uC9C0",
+      "\uC18C\uD55C",
+      "\uB300\uD55C",
+      "\uC785\uCD98",
+      "\uC6B0\uC218",
+      "\uACBD\uCE69"
+    ],
+    trucNames: ["\uAC74", "\uC81C", "\uB9CC", "\uD3C9", "\uC815", "\uC9D1", "\uD30C", "\uC704", "\uC131", "\uC218", "\uAC1C", "\uD3D0"],
+    elementRelationNames: ["\uC0C1\uC0DD", "\uD53C\uC0DD", "\uC0C1\uADF9", "\uD53C\uADF9", "\uBE44\uD654"],
+    trucQualityNames: ["\uD749", "\uBCF4\uD1B5", "\uAE38"]
   }
 };
 function t(locale) {
@@ -351,28 +472,12 @@ function t(locale) {
 function getZodiacAnimal(branchIndex, locale = "vi") {
   return translations[locale].zodiacAnimals[branchIndex % 12];
 }
+function getWeekDayLabels(locale, firstDayOfWeek = 0) {
+  const { weekDays } = translations[locale];
+  return firstDayOfWeek === 0 ? [...weekDays] : [...weekDays.slice(1), weekDays[0]];
+}
 
-// src/core/feng-shui.ts
-function mod(n, m) {
-  return (n % m + m) % m;
-}
-function getYearDetails(year) {
-  const stemIndex = mod(year - 4, 10);
-  const branchIndex = mod(year - 4, 12);
-  const stemWeight = getStemWeight(stemIndex);
-  const branchWeight = getBranchWeight(branchIndex);
-  let elementValue = stemWeight + branchWeight;
-  if (elementValue > 5) {
-    elementValue -= 5;
-  }
-  const elementIndex = elementValue - 1;
-  return {
-    can: HEAVENLY_STEMS[stemIndex],
-    chi: EARTHLY_BRANCHES[branchIndex],
-    menh: FIVE_ELEMENTS[elementIndex],
-    fullString: `${HEAVENLY_STEMS[stemIndex]} ${EARTHLY_BRANCHES[branchIndex]} - M\u1EC7nh ${FIVE_ELEMENTS[elementIndex]}`
-  };
-}
+// src/core/can-chi.ts
 function getDayCanChi(jd, locale = "vi") {
   const stemIndex = (jd + 9) % 10;
   const branchIndex = (jd + 1) % 12;
@@ -394,6 +499,229 @@ function getHourCanChi(hour, dayJd, locale = "vi") {
   const hourStemIndex = (hourStemOffset + hourBranchIndex) % 10;
   const { heavenlyStems, earthlyBranches } = t(locale);
   return `${heavenlyStems[hourStemIndex]} ${earthlyBranches[hourBranchIndex]}`;
+}
+
+// src/utils/math.ts
+function mod(n, m) {
+  return (n % m + m) % m;
+}
+
+// src/core/ngu-hanh.ts
+var NAP_AM_ELEMENT_INDEX = [
+  0,
+  3,
+  1,
+  4,
+  0,
+  3,
+  2,
+  4,
+  0,
+  1,
+  2,
+  4,
+  3,
+  1,
+  2,
+  0,
+  3,
+  1,
+  4,
+  0,
+  3,
+  2,
+  4,
+  0,
+  1,
+  2,
+  4,
+  3,
+  1,
+  2
+];
+function getSexagenaryIndex(stemIndex, branchIndex) {
+  for (let i = 0; i < 60; i++) {
+    if (i % 10 === stemIndex && i % 12 === branchIndex) {
+      return i;
+    }
+  }
+  throw new RangeError(`Lichta: Invalid Can Chi combination (stem=${stemIndex}, chi=${branchIndex})`);
+}
+function getNapAmElementIndex(stemIndex, branchIndex) {
+  const sexagenaryIndex = getSexagenaryIndex(stemIndex, branchIndex);
+  return NAP_AM_ELEMENT_INDEX[Math.floor(sexagenaryIndex / 2)];
+}
+function getElementName(index, locale = "vi") {
+  return t(locale).fiveElements[mod(index, 5)];
+}
+function getDayElementIndex(jd) {
+  const stemIndex = (jd + 9) % 10;
+  const branchIndex = (jd + 1) % 12;
+  return getNapAmElementIndex(stemIndex, branchIndex);
+}
+function getDayElement(jd, locale = "vi") {
+  return getElementName(getDayElementIndex(jd), locale);
+}
+function getMonthElementIndex(lunarMonth, lunarYear) {
+  const yearStemIndex = (lunarYear + 6) % 10;
+  const monthStemOffset = yearStemIndex % 5 * 2 + 2;
+  const monthStemIndex = (monthStemOffset + lunarMonth - 1) % 10;
+  const monthBranchIndex = (lunarMonth + 1) % 12;
+  return getNapAmElementIndex(monthStemIndex, monthBranchIndex);
+}
+function getMonthElement(lunarMonth, lunarYear, locale = "vi") {
+  return getElementName(getMonthElementIndex(lunarMonth, lunarYear), locale);
+}
+function getHourElementIndex(hour, dayJd) {
+  const hourBranchIndex = Math.floor((hour + 1) / 2) % 12;
+  const dayStemIndex = (dayJd + 9) % 10;
+  const hourStemOffset = dayStemIndex % 5 * 2;
+  const hourStemIndex = (hourStemOffset + hourBranchIndex) % 10;
+  return getNapAmElementIndex(hourStemIndex, hourBranchIndex);
+}
+function getHourElement(hour, dayJd, locale = "vi") {
+  return getElementName(getHourElementIndex(hour, dayJd), locale);
+}
+var ELEMENT_SINH_TARGET = [2, 3, 1, 4, 0];
+var ELEMENT_KHAC_TARGET = [1, 4, 3, 0, 2];
+function getElementRelationIndex(fromIndex, toIndex) {
+  const a = mod(fromIndex, 5);
+  const b = mod(toIndex, 5);
+  if (a === b) return 4;
+  if (ELEMENT_SINH_TARGET[a] === b) return 0;
+  if (ELEMENT_SINH_TARGET[b] === a) return 1;
+  if (ELEMENT_KHAC_TARGET[a] === b) return 2;
+  return 3;
+}
+function getElementRelation(fromIndex, toIndex, locale = "vi") {
+  const { elementRelationNames } = t(locale);
+  return elementRelationNames[getElementRelationIndex(fromIndex, toIndex)];
+}
+
+// src/core/tiet-khi.ts
+function getSolarTermName(index, locale = "vi") {
+  const { solarTermNames } = t(locale);
+  return solarTermNames[(index % 24 + 24) % 24];
+}
+function getSolarTerm(day, month, year, timeZone = 7, locale = "vi") {
+  const jd = jdFromDate(day, month, year);
+  const index = getSolarTermIndex(jd + 1, timeZone);
+  return { index, name: getSolarTermName(index, locale), date: { day, month, year }, jd };
+}
+var occurrencesCache = /* @__PURE__ */ new Map();
+function getSolarTermOccurrencesInYear(year, timeZone) {
+  const cacheKey = `${year}:${timeZone}`;
+  const cached = occurrencesCache.get(cacheKey);
+  if (cached) return cached;
+  const startJd = jdFromDate(1, 1, year) - 5;
+  const endJd = jdFromDate(31, 12, year) + 5;
+  const occurrences = [];
+  let prevIndex = getSolarTermIndex(startJd, timeZone);
+  for (let jd = startJd + 1; jd <= endJd; jd++) {
+    const index = getSolarTermIndex(jd, timeZone);
+    if (index !== prevIndex) {
+      const termJd = jd - 1;
+      const [, , jdYear] = jdToDate(termJd);
+      if (jdYear === year) {
+        occurrences.push({ index, jd: termJd });
+      }
+      prevIndex = index;
+    }
+  }
+  occurrencesCache.set(cacheKey, occurrences);
+  return occurrences;
+}
+function getSolarTermsInYear(year, timeZone = 7, locale = "vi") {
+  return getSolarTermOccurrencesInYear(year, timeZone).map(({ index, jd }) => {
+    const [day, month, jdYear] = jdToDate(jd);
+    return { index, name: getSolarTermName(index, locale), date: { day, month, year: jdYear }, jd };
+  });
+}
+
+// src/core/truc-zodiac.ts
+var TRUC_COUNT = 12;
+function getTrucIndex(jd, timeZone = 7) {
+  const [, , year] = jdToDate(jd);
+  const tietTerms = [year - 1, year, year + 1].flatMap((y) => getSolarTermOccurrencesInYear(y, timeZone)).filter((term) => term.index % 2 === 1);
+  let governingTietJd = -Infinity;
+  for (const term of tietTerms) {
+    if (term.jd <= jd && term.jd > governingTietJd) {
+      governingTietJd = term.jd;
+    }
+  }
+  return mod(jd - governingTietJd, TRUC_COUNT);
+}
+function getTrucName(index, locale = "vi") {
+  const { trucNames } = t(locale);
+  return trucNames[mod(index, TRUC_COUNT)];
+}
+function getTruc(jd, timeZone = 7, locale = "vi") {
+  return getTrucName(getTrucIndex(jd, timeZone), locale);
+}
+var TRUC_QUALITY_INDEX = [1, 1, 1, 1, 1, 1, 0, 0, 2, 1, 2, 1];
+function getTrucQualityIndex(trucIndex) {
+  return TRUC_QUALITY_INDEX[mod(trucIndex, TRUC_COUNT)];
+}
+function getTrucQuality(trucIndex, locale = "vi") {
+  const { trucQualityNames } = t(locale);
+  return trucQualityNames[getTrucQualityIndex(trucIndex)];
+}
+function getXungBranchIndex(branchIndex) {
+  return mod(branchIndex + 6, 12);
+}
+function isXung(branchIndexA, branchIndexB) {
+  return getXungBranchIndex(mod(branchIndexA, 12)) === mod(branchIndexB, 12);
+}
+var HAI_BRANCH_TARGET = [7, 6, 5, 4, 3, 2, 1, 0, 11, 10, 9, 8];
+function getHaiBranchIndex(branchIndex) {
+  return HAI_BRANCH_TARGET[mod(branchIndex, 12)];
+}
+function isHai(branchIndexA, branchIndexB) {
+  return getHaiBranchIndex(mod(branchIndexA, 12)) === mod(branchIndexB, 12);
+}
+var TU_HANH_XUNG_GROUP = [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1];
+var TU_HANH_XUNG_MEMBERS = [
+  [0, 3, 6, 9],
+  // Tý, Mão, Ngọ, Dậu
+  [2, 5, 8, 11],
+  // Dần, Tỵ, Thân, Hợi
+  [1, 4, 7, 10]
+  // Sửu, Thìn, Mùi, Tuất
+];
+function getTuHanhXungGroupIndex(branchIndex) {
+  return TU_HANH_XUNG_GROUP[mod(branchIndex, 12)];
+}
+function getTuHanhXungGroupMembers(branchIndex) {
+  return [...TU_HANH_XUNG_MEMBERS[getTuHanhXungGroupIndex(branchIndex)]];
+}
+function isTuHanhXung(branchIndexA, branchIndexB) {
+  const a = mod(branchIndexA, 12);
+  const b = mod(branchIndexB, 12);
+  return a !== b && getTuHanhXungGroupIndex(a) === getTuHanhXungGroupIndex(b);
+}
+function getZodiacConflicts(branchIndexA, branchIndexB) {
+  return {
+    xung: isXung(branchIndexA, branchIndexB),
+    hai: isHai(branchIndexA, branchIndexB),
+    tuHanhXung: isTuHanhXung(branchIndexA, branchIndexB)
+  };
+}
+
+// src/constants/five-elements.ts
+var FIVE_ELEMENTS = ["Kim", "M\u1ED9c", "Th\u1EE7y", "H\u1ECFa", "Th\u1ED5"];
+
+// src/core/almanac.ts
+function getYearDetails(year) {
+  const stemIndex = mod(year - 4, 10);
+  const branchIndex = mod(year - 4, 12);
+  const elementIndex = getNapAmElementIndex(stemIndex, branchIndex);
+  return {
+    can: HEAVENLY_STEMS[stemIndex],
+    chi: EARTHLY_BRANCHES[branchIndex],
+    menh: FIVE_ELEMENTS[elementIndex],
+    menhIndex: elementIndex,
+    fullString: `${HEAVENLY_STEMS[stemIndex]} ${EARTHLY_BRANCHES[branchIndex]} - M\u1EC7nh ${FIVE_ELEMENTS[elementIndex]}`
+  };
 }
 var AUSPICIOUS_HOURS_TABLE = [
   [0, 1, 3, 6, 7, 9],
@@ -420,6 +748,18 @@ function getAuspiciousHourIndices(dayJd) {
   const branchIndex = (dayJd + 1) % 12;
   const groupIndex = branchIndex % 6;
   return [...AUSPICIOUS_HOURS_TABLE[groupIndex]];
+}
+function getInauspiciousHourIndices(dayJd) {
+  const auspicious = new Set(getAuspiciousHourIndices(dayJd));
+  const inauspicious = [];
+  for (let i = 0; i < 12; i++) {
+    if (!auspicious.has(i)) inauspicious.push(i);
+  }
+  return inauspicious;
+}
+function getInauspiciousHours(dayJd, locale = "vi") {
+  const { earthlyBranches } = t(locale);
+  return getInauspiciousHourIndices(dayJd).map((i) => earthlyBranches[i]);
 }
 
 // src/utils/format.ts
@@ -504,11 +844,20 @@ function formatTraditional(lunar) {
 function dateKey(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
-function getCalendarGrid(month, year, selectedDate) {
+function getISOWeekNumber(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const firstThursdayDayNum = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstThursdayDayNum + 3);
+  return 1 + Math.round((d.getTime() - firstThursday.getTime()) / 6048e5);
+}
+function getCalendarGrid(month, year, selectedDate, firstDayOfWeek = 0) {
   const grid = [];
   const firstDay = new Date(year, month - 1, 1);
   const lastDay = new Date(year, month, 0);
-  const startingDayOfWeek = firstDay.getDay();
+  const startingDayOfWeek = (firstDay.getDay() - firstDayOfWeek + 7) % 7;
   const daysInMonth = lastDay.getDate();
   const todayKey = dateKey(/* @__PURE__ */ new Date());
   const selectedKey = selectedDate ? dateKey(selectedDate) : "";
@@ -519,7 +868,9 @@ function getCalendarGrid(month, year, selectedDate) {
       lunar: LichTa.toLunar(d, m, y),
       isToday: dateKey(solar) === todayKey,
       isSelected: dateKey(solar) === selectedKey,
-      isCurrentMonth
+      isCurrentMonth,
+      weekNumber: 0
+      // gán lại theo từng hàng ở bước cuối, xem vòng lặp bên dưới
     });
   };
   for (let i = startingDayOfWeek - 1; i >= 0; i--) {
@@ -537,6 +888,13 @@ function getCalendarGrid(month, year, selectedDate) {
     const y = month + 1 > 12 ? year + 1 : year;
     pushCell(new Date(y, m - 1, d), d, m, y, false);
   }
+  const thursdayOffset = (4 - firstDayOfWeek + 7) % 7;
+  for (let row = 0; row < grid.length; row += 7) {
+    const weekNumber = getISOWeekNumber(grid[row + thursdayOffset].solar);
+    for (let i = row; i < row + 7; i++) {
+      grid[i].weekNumber = weekNumber;
+    }
+  }
   return grid;
 }
 export {
@@ -547,12 +905,41 @@ export {
   getAuspiciousHours,
   getCalendarGrid,
   getDayCanChi,
+  getDayElement,
+  getDayElementIndex,
   getDayName,
+  getElementName,
+  getElementRelation,
+  getElementRelationIndex,
+  getHaiBranchIndex,
   getHourCanChi,
+  getHourElement,
+  getHourElementIndex,
+  getISOWeekNumber,
+  getInauspiciousHourIndices,
+  getInauspiciousHours,
   getMonthCanChi,
+  getMonthElement,
+  getMonthElementIndex,
   getMonthName,
+  getSolarTerm,
+  getSolarTermName,
+  getSolarTermsInYear,
+  getTruc,
+  getTrucIndex,
+  getTrucName,
+  getTrucQuality,
+  getTrucQualityIndex,
+  getTuHanhXungGroupIndex,
+  getTuHanhXungGroupMembers,
+  getWeekDayLabels,
+  getXungBranchIndex,
   getYearDetails,
   getZodiacAnimal,
+  getZodiacConflicts,
+  isHai,
+  isTuHanhXung,
+  isXung,
   jdFromDate,
   jdToDate,
   t

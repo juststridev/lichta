@@ -1,7 +1,7 @@
 # @lichta/react-big-calendar
 
-[![npm version](https://img.shields.io/npm/v/@lichta/react-big-calendar.svg)](https://www.npmjs.com/package/@lichta/react-big-calendar)
-[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+[![@lichta/react-big-calendar](https://img.shields.io/npm/v/@lichta/react-big-calendar.svg?label=%40lichta%2Freact-big-calendar)](https://www.npmjs.com/package/@lichta/react-big-calendar)
+[![@lichta/core](https://img.shields.io/npm/v/@lichta/core.svg?label=%40lichta%2Fcore)](https://www.npmjs.com/package/@lichta/core)
 
 🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 

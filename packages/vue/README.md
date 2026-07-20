@@ -1,7 +1,7 @@
 # @lichta/vue
 
-[![npm version](https://img.shields.io/npm/v/@lichta/vue.svg)](https://www.npmjs.com/package/@lichta/vue)
-[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+[![@lichta/vue](https://img.shields.io/npm/v/@lichta/vue.svg?label=%40lichta%2Fvue)](https://www.npmjs.com/package/@lichta/vue)
+[![@lichta/core](https://img.shields.io/npm/v/@lichta/core.svg?label=%40lichta%2Fcore)](https://www.npmjs.com/package/@lichta/core)
 
 🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
@@ -44,6 +44,8 @@ function onSelect(date: Date, lunar: LunarDate) {
 | `year` | `number` | Năm hiện tại | Năm hiển thị ban đầu |
 | `showLunar` | `boolean` | `true` | Hiện ngày âm lịch dưới ngày dương |
 | `locale` | `'vi' \| 'en' \| 'ja' \| 'ko'` | `'vi'` | Ngôn ngữ nhãn thứ trong tuần |
+| `firstDayOfWeek` | `0 \| 1` | `0` | Ngày bắt đầu tuần: `0` = Chủ Nhật, `1` = Thứ Hai |
+| `showWeekNumber` | `boolean` | `false` | Hiện số tuần (ISO-8601) ở đầu mỗi hàng |
 | `theme` | `'classic' \| 'glass'` | `'classic'` | Giao diện lịch |
 
 ## Events
@@ -51,8 +53,9 @@ function onSelect(date: Date, lunar: LunarDate) {
 | Event | Payload | Mô tả |
 |---|---|---|
 | `select` | `(date: Date, lunar: LunarDate)` | Bắn ra khi người dùng chọn 1 ngày |
+| `month-change` | `(month: number, year: number)` | Bắn ra khi điều hướng tháng qua nút prev/next trong header |
 
-> Khác với `@lichta/react`/`@lichta/svelte` (dùng prop `onSelect`), Vue theo đúng convention của framework nên dùng `emit`/`@select` thay vì prop callback. Component cũng chưa hỗ trợ custom render cho từng ô ngày (có ở React/Svelte qua `renderDay`/`dayCell`) hay điều khiển `month`/`year` như controlled prop — thay đổi prop sau khi mount chưa tự động cập nhật lại lịch đang hiển thị.
+> Khác với `@lichta/react`/`@lichta/svelte` (dùng prop `onSelect`), Vue theo đúng convention của framework nên dùng `emit`/`@select` (và `@month-change`) thay vì prop callback. Component cũng chưa hỗ trợ custom render cho từng ô ngày (có ở React/Svelte qua `renderDay`/`dayCell`). `month`/`year` là controlled prop — component tự đồng bộ lại khi cha đổi giá trị; kết hợp với `@month-change` để đồng bộ 2 chiều với 1 nguồn điều hướng khác (ví dụ FullCalendar).
 
 ## DatePicker
 
@@ -85,6 +88,7 @@ function onSelect(date, lunar) {
 | `value` | `Date \| null` | `null` | Ngày đang chọn (uncontrolled — component tự quản lý sau lần mount đầu) |
 | `placeholder` | `string` | `'Chọn ngày'` | Placeholder khi chưa chọn ngày |
 | `locale` | `'vi' \| 'en' \| 'ja' \| 'ko'` | `'vi'` | Ngôn ngữ hiển thị trong popover |
+| `firstDayOfWeek` | `0 \| 1` | `0` | Ngày bắt đầu tuần: `0` = Chủ Nhật, `1` = Thứ Hai |
 | `theme` | `'classic' \| 'glass'` | `'classic'` | Giao diện input + popover |
 | `showLunar` | `boolean` | `true` | Hiện ngày âm lịch trong popover |
 | `format` | `(date: Date) => string` | `dd/MM/yyyy` | Hàm format ngày hiển thị trên input |
@@ -93,6 +97,7 @@ function onSelect(date, lunar) {
 | Event | Payload | Mô tả |
 |---|---|---|
 | `select` | `(date: Date, lunar: LunarDate)` | Bắn khi chọn ngày trong popover |
+| `month-change` | `(month: number, year: number)` | Bắn khi điều hướng tháng qua nút prev/next trong popover |
 
 Popover tự đóng khi: chọn xong 1 ngày, click ra ngoài, hoặc nhấn phím `Escape`.
 
