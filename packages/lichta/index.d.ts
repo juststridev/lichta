@@ -1,1 +1,1 @@
-export * from '@lichta/svelte';
+export * from '@lichta/core';

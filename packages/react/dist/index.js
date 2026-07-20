@@ -44,8 +44,11 @@ var Calendar = ({
   year = (/* @__PURE__ */ new Date()).getFullYear(),
   selectedDate: selectedDateProp,
   onSelect,
+  onMonthChange,
   showLunar = true,
   locale = "vi",
+  firstDayOfWeek = 0,
+  showWeekNumber = false,
   theme = "classic",
   className = "",
   children,
@@ -62,26 +65,25 @@ var Calendar = ({
     setCurrentYear(year);
   }, [year]);
   const yearInfo = (0, import_react.useMemo)(() => (0, import_core.getYearDetails)(currentYear), [currentYear]);
-  const { weekDays: weekDayLabels, solarMonthNames: monthNames } = (0, import_core.t)(locale);
+  const { solarMonthNames: monthNames } = (0, import_core.t)(locale);
+  const weekDayLabels = (0, import_react.useMemo)(() => (0, import_core.getWeekDayLabels)(locale, firstDayOfWeek), [locale, firstDayOfWeek]);
   const calendarGrid = (0, import_react.useMemo)(
-    () => (0, import_core.getCalendarGrid)(currentMonth, currentYear, selectedDate),
-    [currentMonth, currentYear, selectedDate]
+    () => (0, import_core.getCalendarGrid)(currentMonth, currentYear, selectedDate, firstDayOfWeek),
+    [currentMonth, currentYear, selectedDate, firstDayOfWeek]
   );
   const prevMonth = () => {
-    if (currentMonth === 1) {
-      setCurrentMonth(12);
-      setCurrentYear((y) => y - 1);
-    } else {
-      setCurrentMonth((m) => m - 1);
-    }
+    const newMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const newYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+    onMonthChange?.(newMonth, newYear);
   };
   const nextMonth = () => {
-    if (currentMonth === 12) {
-      setCurrentMonth(1);
-      setCurrentYear((y) => y + 1);
-    } else {
-      setCurrentMonth((m) => m + 1);
-    }
+    const newMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+    const newYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+    onMonthChange?.(newMonth, newYear);
   };
   const handleDayClick = (cell) => {
     if (selectedDateProp === void 0) {
@@ -97,7 +99,7 @@ var Calendar = ({
       handleDayClick(cell);
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `lich-ta-calendar lichta-theme-${theme} ${className}`, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `lich-ta-calendar lichta-theme-${theme} ${showWeekNumber ? "lich-ta-calendar--with-week-number" : ""} ${className}`, children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "lich-ta-calendar-header", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "lich-ta-calendar-nav", onClick: prevMonth, "aria-label": "Th\xE1ng tr\u01B0\u1EDBc", children: "\u25C0" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "lich-ta-calendar-title", children: [
@@ -114,30 +116,39 @@ var Calendar = ({
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "lich-ta-calendar-nav", onClick: nextMonth, "aria-label": "Th\xE1ng sau", children: "\u25B6" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-weekdays", children: weekDayLabels.map((label) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-weekday", children: label }, label)) }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "lich-ta-calendar-weekdays", children: [
+      showWeekNumber && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-week-number", "aria-hidden": "true" }),
+      weekDayLabels.map((label) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-weekday", children: label }, label))
+    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-grid", children: calendarGrid.map((cell, idx) => {
+      const weekNumberCell = showWeekNumber && idx % 7 === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-week-number", children: cell.weekNumber }, `wn-${idx}`) : null;
       if (renderDay) {
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react.default.Fragment, { children: renderDay(cell) }, idx);
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react.default.Fragment, { children: [
+          weekNumberCell,
+          renderDay(cell)
+        ] }, idx);
       }
       let classes = "lich-ta-calendar-day";
       if (cell.isToday) classes += " is-today";
       if (cell.isSelected) classes += " is-selected";
       if (!cell.isCurrentMonth) classes += " is-other-month";
       if (cell.lunar.day === 1) classes += " is-first-lunar";
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-        "button",
-        {
-          className: classes,
-          onClick: () => handleDayClick(cell),
-          onKeyDown: (e) => handleKeydown(e, cell),
-          tabIndex: cell.isCurrentMonth ? 0 : -1,
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "solar-day", children: cell.solar.getDate() }),
-            showLunar && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "lunar-day", children: cell.lunar.day === 1 ? `${cell.lunar.day}/${cell.lunar.month}${cell.lunar.isLeap ? "*" : ""}` : cell.lunar.day })
-          ]
-        },
-        idx
-      );
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react.default.Fragment, { children: [
+        weekNumberCell,
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "button",
+          {
+            className: classes,
+            onClick: () => handleDayClick(cell),
+            onKeyDown: (e) => handleKeydown(e, cell),
+            tabIndex: cell.isCurrentMonth ? 0 : -1,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "solar-day", children: cell.solar.getDate() }),
+              showLunar && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "lunar-day", children: cell.lunar.day === 1 ? `${cell.lunar.day}/${cell.lunar.month}${cell.lunar.isLeap ? "*" : ""}` : cell.lunar.day })
+            ]
+          }
+        )
+      ] }, idx);
     }) }),
     children && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "lich-ta-calendar-footer", children })
   ] });
@@ -155,8 +166,10 @@ function defaultFormat(date) {
 var DatePicker = ({
   value = null,
   onSelect,
+  onMonthChange,
   placeholder = "Ch\u1ECDn ng\xE0y",
   locale = "vi",
+  firstDayOfWeek = 0,
   theme = "classic",
   showLunar = true,
   format = defaultFormat,
@@ -195,26 +208,25 @@ var DatePicker = ({
     };
   }, [isOpen]);
   const yearInfo = (0, import_react2.useMemo)(() => (0, import_core2.getYearDetails)(viewYear), [viewYear]);
-  const { weekDays: weekDayLabels, solarMonthNames: monthNames } = (0, import_core2.t)(locale);
+  const { solarMonthNames: monthNames } = (0, import_core2.t)(locale);
+  const weekDayLabels = (0, import_react2.useMemo)(() => (0, import_core2.getWeekDayLabels)(locale, firstDayOfWeek), [locale, firstDayOfWeek]);
   const grid = (0, import_react2.useMemo)(
-    () => (0, import_core2.getCalendarGrid)(viewMonth, viewYear, selected),
-    [viewMonth, viewYear, selected]
+    () => (0, import_core2.getCalendarGrid)(viewMonth, viewYear, selected, firstDayOfWeek),
+    [viewMonth, viewYear, selected, firstDayOfWeek]
   );
   function prevMonth() {
-    if (viewMonth === 1) {
-      setViewMonth(12);
-      setViewYear((y) => y - 1);
-    } else {
-      setViewMonth((m) => m - 1);
-    }
+    const newMonth = viewMonth === 1 ? 12 : viewMonth - 1;
+    const newYear = viewMonth === 1 ? viewYear - 1 : viewYear;
+    setViewMonth(newMonth);
+    setViewYear(newYear);
+    onMonthChange?.(newMonth, newYear);
   }
   function nextMonth() {
-    if (viewMonth === 12) {
-      setViewMonth(1);
-      setViewYear((y) => y + 1);
-    } else {
-      setViewMonth((m) => m + 1);
-    }
+    const newMonth = viewMonth === 12 ? 1 : viewMonth + 1;
+    const newYear = viewMonth === 12 ? viewYear + 1 : viewYear;
+    setViewMonth(newMonth);
+    setViewYear(newYear);
+    onMonthChange?.(newMonth, newYear);
   }
   function handleDaySelect(cell) {
     setSelected(cell.solar);

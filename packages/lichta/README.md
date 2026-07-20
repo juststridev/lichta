@@ -1,7 +1,7 @@
 # lichta (legacy)
 
-[![npm version](https://img.shields.io/npm/v/lichta.svg)](https://www.npmjs.com/package/lichta)
-[![npm version](https://img.shields.io/npm/v/@lichta/core.svg)](https://www.npmjs.com/package/@lichta/core)
+[![lichta](https://img.shields.io/npm/v/lichta.svg?label=lichta)](https://www.npmjs.com/package/lichta)
+[![@lichta/core](https://img.shields.io/npm/v/@lichta/core.svg?label=%40lichta%2Fcore)](https://www.npmjs.com/package/@lichta/core)
 
 🚀 **[Demo trực tiếp](https://lichta.zeneo.app/)**
 
@@ -11,19 +11,20 @@
 
 Trước đây toàn bộ thư viện được publish dưới 1 package tên `lichta` duy nhất. Từ khi tách thành monorepo với các package scoped (`@lichta/core`, `@lichta/react`, `@lichta/vue`, `@lichta/svelte`, `@lichta/full-calendar`, `@lichta/event-calendar`, `@lichta/react-big-calendar`), package `lichta` được giữ lại làm cầu nối tương thích ngược cho những dự án đang cài `lichta` từ trước, tránh vỡ code đột ngột khi họ chạy `npm update`.
 
-## Trạng thái hiện tại
+## Trạng thái hiện tại (từ v2.2.0)
 
-**Package này hiện chỉ re-export `@lichta/svelte`:**
+**Package này giờ chỉ re-export `@lichta/core`** (vanilla JS/TS, không phụ thuộc framework nào):
 
 ```javascript
 // index.js
-console.warn("[lichta] WARNING: The 'lichta' package is deprecated for Svelte components. ...");
-export * from '@lichta/svelte';
+export * from '@lichta/core';
 ```
 
 Nghĩa là:
-- Nếu bạn đang dùng Svelte, `import { ... } from 'lichta'` vẫn hoạt động (thực chất là `@lichta/svelte`), nhưng sẽ in cảnh báo deprecation ra console.
-- Nếu bạn dùng React, Vue, hoặc chỉ cần logic tính toán thuần (vanilla JS/TS) — package này **không có đường dẫn tương thích cho bạn**, vì nó chỉ trỏ tới `@lichta/svelte`. Cài `lichta` trong trường hợp này sẽ kéo theo `svelte` như một dependency dù bạn không dùng Svelte.
+- `import { LichTa } from 'lichta'` hoạt động tương đương `import { LichTa } from '@lichta/core'` — không kéo theo `react`/`vue`/`svelte` như một dependency dù bạn không dùng.
+- Nếu bạn cần component UI (Calendar/DatePicker) cho React, Vue, hoặc Svelte — package này **không có đường dẫn tương thích cho bạn**, cài thẳng package framework tương ứng bên dưới.
+
+> ⚠️ **Breaking change so với các bản trước v2.2.0**: trước đây `lichta` re-export `@lichta/svelte` (kèm cảnh báo deprecation). Nếu bạn đang dùng `import { Calendar } from 'lichta'` để lấy Svelte component, migrate sang `@lichta/svelte`.
 
 ## Nên làm gì
 
@@ -39,7 +40,7 @@ Nghĩa là:
 | EventCalendar | [`@lichta/event-calendar`](https://www.npmjs.com/package/@lichta/event-calendar) |
 | React Big Calendar | [`@lichta/react-big-calendar`](https://www.npmjs.com/package/@lichta/react-big-calendar) |
 
-Nếu bạn đang cài `lichta` từ trước và dùng API core (`LichTa.toLunar()`, ...), chuyển sang `@lichta/core` — API không đổi, chỉ đổi tên import:
+Nếu bạn đang cài `lichta` từ trước và dùng API core (`LichTa.toLunar()`, ...), không cần đổi gì — `lichta` giờ chính là `@lichta/core`. Khuyến nghị đổi tên import cho rõ ràng:
 
 ```diff
 - import { LichTa } from 'lichta';
