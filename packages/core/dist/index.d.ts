@@ -338,15 +338,21 @@ declare function getElementRelation(fromIndex: number, toIndex: number, locale?:
  * Tính index Trực (0-11: Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu, Khai, Bế)
  * tại một ngày dương lịch (Julian Day Number).
  *
- * Trực được neo theo 12 Tiết (Lập Xuân, Kinh Trập, Thanh Minh, ...) — tức các index
- * lẻ trong 24 Tiết Khí ({@link import('./tiet-khi.js').getSolarTermsInYear}, `tiet-khi.ts`) —
- * KHÔNG theo số tháng âm lịch, vì tháng nhuận âm lịch không tương ứng với một Tiết mới
- * (dùng số tháng âm lịch sẽ cho kết quả sai trong các tháng nhuận).
+ * Theo đúng phép Kiến Trừ thập nhị khách truyền thống, mỗi Tiết trong 12 Tiết (Lập
+ * Xuân, Kinh Trập, Thanh Minh, ... — tức các index lẻ trong 24 Tiết Khí, xem
+ * {@link import('./tiet-khi.js').getSolarTermsInYear}) ứng với một Chi "Kiến" CỐ ĐỊNH
+ * (Lập Xuân → Kiến Dần, Kinh Trập → Kiến Mão, Thanh Minh → Kiến Thìn, ..., Tiểu Hàn →
+ * Kiến Sửu). Trực của một ngày = độ lệch giữa Chi của chính ngày đó và Chi Kiến của
+ * Tiết đang hiệu lực — KHÔNG phải số ngày đã trôi qua kể từ khi Tiết bắt đầu.
  *
- * Ngày Tiết bắt đầu luôn là "Kiến" (index 0), Trực tăng dần 1 mỗi ngày sau đó và
- * quay lại "Kiến" vào Tiết kế tiếp. Vì mỗi Tiết dài ~15 ngày (không chia hết cho
- * chu kỳ 12 ngày của Trực), một số Trực sẽ bị lặp lại hoặc rút ngắn giữa 2 Tiết
- * liên tiếp — đây là đặc tính vốn có của hệ Kiến Trừ truyền thống, không phải lỗi.
+ * Hai cách tính chỉ trùng nhau khi ngày bắt đầu Tiết tình cờ có đúng Chi Kiến của Tiết
+ * đó (không phải lúc nào cũng vậy — ví dụ Tiểu Thử 2026 rơi vào ngày Nhâm Ngọ chứ không
+ * phải ngày Mùi). Vì vậy KHÔNG được gán "Kiến" (index 0) cho chính ngày bắt đầu Tiết
+ * một cách mặc định.
+ *
+ * Cũng dùng Tiết (không dùng số tháng âm lịch) để neo, vì tháng nhuận âm lịch không
+ * tương ứng với một Tiết mới (dùng số tháng âm lịch sẽ cho kết quả sai trong các
+ * tháng nhuận).
  *
  * Dùng `getSolarTermOccurrencesInYear` (dữ liệu thô, có cache theo năm+timeZone)
  * thay vì `getSolarTermsInYear` công khai — tránh tính tên/locale không cần dùng

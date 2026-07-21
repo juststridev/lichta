@@ -713,13 +713,15 @@ var TRUC_COUNT = 12;
 function getTrucIndex(jd, timeZone = 7) {
   const [, , year] = jdToDate(jd);
   const tietTerms = [year - 1, year, year + 1].flatMap((y) => getSolarTermOccurrencesInYear(y, timeZone)).filter((term) => term.index % 2 === 1);
-  let governingTietJd = -Infinity;
+  let governingTiet = tietTerms[0];
   for (const term of tietTerms) {
-    if (term.jd <= jd && term.jd > governingTietJd) {
-      governingTietJd = term.jd;
+    if (term.jd <= jd && term.jd > governingTiet.jd) {
+      governingTiet = term;
     }
   }
-  return mod(jd - governingTietJd, TRUC_COUNT);
+  const kienBranchIndex = mod((governingTiet.index - 21) / 2 + 2, TRUC_COUNT);
+  const dayBranchIndex = mod(jd + 1, TRUC_COUNT);
+  return mod(dayBranchIndex - kienBranchIndex, TRUC_COUNT);
 }
 function getTrucName(index, locale = "vi") {
   const { trucNames } = t(locale);
@@ -796,7 +798,7 @@ function getYearDetails(year) {
 var AUSPICIOUS_HOURS_TABLE = [
   [0, 1, 3, 6, 7, 9],
   // Ngày Tý (0) / Ngọ (6)
-  [2, 3, 5, 8, 9, 11],
+  [2, 3, 5, 8, 10, 11],
   // Ngày Sửu (1) / Mùi (7)
   [0, 1, 4, 5, 7, 10],
   // Ngày Dần (2) / Thân (8)

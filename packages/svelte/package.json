@@ -1,6 +1,6 @@
 {
 	"name": "@lichta/svelte",
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"description": "Svelte components for LichTa",
 	"author": "Zeforc Labs | Stridev",
 	"license": "MIT",
